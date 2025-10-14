@@ -57,9 +57,7 @@ const calculatedLatestItemKeys: CalculatedLatestItemKey[] = [
 
 export type CalculatedLatestItemKey = keyof CalculatedLatestItem;
 
-export function isCalculatedLatestItemKey(
-	key: string
-): key is CalculatedLatestItemKey {
+export function isCalculatedLatestItemKey(key: string): key is CalculatedLatestItemKey {
 	return (calculatedLatestItemKeys as string[]).includes(key);
 }
 

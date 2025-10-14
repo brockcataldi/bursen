@@ -10,17 +10,11 @@ export const load: PageLoad = async ({ parent, url }) => {
 	const max = Math.floor(items.length / PAGE_SIZE) + 1;
 
 	const pageParam = parseInt(url.searchParams.get('page') || '1', 10);
-	const directionParam = parseInt(
-		url.searchParams.get('direction') || '-1',
-		10
-	);
-	const columnParam: ItemKey = (url.searchParams.get('column') ||
-		'margin') as ItemKey;
+	const directionParam = parseInt(url.searchParams.get('direction') || '-1', 10);
+	const columnParam: ItemKey = (url.searchParams.get('column') || 'margin') as ItemKey;
 
 	const page = Number.isNaN(pageParam) ? 1 : clamp(pageParam, 1, max);
-	const direction = Number.isNaN(directionParam)
-		? 1
-		: Math.sign(directionParam);
+	const direction = Number.isNaN(directionParam) ? 1 : Math.sign(directionParam);
 
 	const start = (page - 1) * PAGE_SIZE;
 	const end = start + PAGE_SIZE;
