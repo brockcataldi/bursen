@@ -38,12 +38,12 @@ const mappingItemKeys: MappingItemKey[] = [
 	'price',
 	'last',
 	'volume'
-];
+] as const;
 
 export type MappingItemKey = keyof MappingItem;
 
 export function isMappingItemKey(key: string): key is MappingItemKey {
-	return (mappingItemKeys as string[]).includes(key);
+	return (mappingItemKeys as readonly string[]).includes(key);
 }
 
 export type CalculatedLatestItem = LatestItem & {
@@ -60,17 +60,17 @@ const calculatedLatestItemKeys: CalculatedLatestItemKey[] = [
 	'tax',
 	'sell',
 	'margin'
-];
+] as const;
 
 export type CalculatedLatestItemKey = keyof CalculatedLatestItem;
 
 export function isCalculatedLatestItemKey(
 	key: string
 ): key is CalculatedLatestItemKey {
-	return (calculatedLatestItemKeys as string[]).includes(key);
+	return (calculatedLatestItemKeys as readonly string[]).includes(key);
 }
 
-export type ItemKey = CalculatedLatestItemKey & MappingItemKey;
+export type ItemKey = CalculatedLatestItemKey | MappingItemKey;
 
 export function isItemKey(key: string): key is ItemKey {
 	return isMappingItemKey(key) || isCalculatedLatestItemKey(key);

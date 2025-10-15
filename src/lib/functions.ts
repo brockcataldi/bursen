@@ -35,10 +35,12 @@ export function formatDateTime(value: Date | number) {
 export function getSortValue(
 	item: Item,
 	key: ItemKey
-): string | number | undefined {
+): string | boolean | number | undefined {
+
 	if (isCalculatedLatestItemKey(key)) {
 		return item.latest[key];
 	}
+
 	if (isMappingItemKey(key)) {
 		return item[key];
 	}

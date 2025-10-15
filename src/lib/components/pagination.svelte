@@ -2,28 +2,26 @@
 	type Props = {
 		page: number;
 		max: number;
-		url?: string;
+		onChange: (page: number) => void
 	};
 
-	let { page, max, url }: Props = $props();
-
-	const u = $derived(url ? `&${url}` : '');
+	let { page, max, onChange}: Props = $props();
 </script>
 
 <div class="grid w-full place-items-center py-2">
 	<div class="join">
 		{#if page !== 1}
-			<a class="btn join-item" href="?page=1{u}">First</a>
+			<button class="btn join-item" onclick={() => onChange(1)}>First</button>
 		{/if}
 
 		{#if page > 1}
-			<a class="btn join-item" href="?page={page - 1}{u}">Prev</a>
+			<button class="btn join-item" onclick={() => onChange(page - 1)}>Prev</button>
 		{/if}
 
 		{#each { length: 3 } as _, i}
 			{@const index = page - 3 + i}
 			{#if index > 0}
-				<a class="btn join-item" href="?page={index}{u}">{index}</a>
+				<button class="btn join-item" onclick={() => onChange(index)}>{index}</button>
 			{/if}
 		{/each}
 
@@ -32,16 +30,16 @@
 		{#each { length: 3 } as _, i}
 			{@const index = page + 1 + i}
 			{#if index < max}
-				<a class="btn join-item" href="?page={index}{u}">{index}</a>
+				<button class="btn join-item"  onclick={() => onChange(index)}>{index}</button>
 			{/if}
 		{/each}
 
 		{#if page <= max}
-			<a class="btn join-item" href="?page={page + 1}{u}">Next</a>
+			<button class="btn join-item" onclick={() => onChange(page + 1)}>Next</button>
 		{/if}
 
 		{#if page !== max}
-			<a class="btn join-item" href="?page={max}{u}">Last</a>
+			<button class="btn join-item" onclick={() => onChange(max)}>Last</button>
 		{/if}
 	</div>
 </div>
