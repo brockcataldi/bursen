@@ -8,7 +8,7 @@ export interface LatestItem {
 	lowTime: number;
 }
 
-export type MappingResponse = MappingItem[];
+export type MappingResponse = { [key: string]: MappingItem };
 
 export interface MappingItem {
 	examine: string;
@@ -20,6 +20,9 @@ export interface MappingItem {
 	highalch: number;
 	icon: string;
 	name: string;
+	price: number;
+	last: number;
+	volume: number;
 }
 
 const mappingItemKeys: MappingItemKey[] = [
@@ -31,8 +34,12 @@ const mappingItemKeys: MappingItemKey[] = [
 	'value',
 	'highalch',
 	'icon',
-	'name'
+	'name',
+	'price',
+	'last',
+	'volume'
 ];
+
 export type MappingItemKey = keyof MappingItem;
 
 export function isMappingItemKey(key: string): key is MappingItemKey {
@@ -57,14 +64,16 @@ const calculatedLatestItemKeys: CalculatedLatestItemKey[] = [
 
 export type CalculatedLatestItemKey = keyof CalculatedLatestItem;
 
-export function isCalculatedLatestItemKey(key: string): key is CalculatedLatestItemKey {
+export function isCalculatedLatestItemKey(
+	key: string
+): key is CalculatedLatestItemKey {
 	return (calculatedLatestItemKeys as string[]).includes(key);
 }
 
 export type ItemKey = CalculatedLatestItemKey & MappingItemKey;
 
 export function isItemKey(key: string): key is ItemKey {
-	return isMappingItemKey(key) && isCalculatedLatestItemKey(key);
+	return isMappingItemKey(key) || isCalculatedLatestItemKey(key);
 }
 
 export type ItemsMap = { [id: number]: Item };

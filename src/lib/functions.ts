@@ -2,7 +2,7 @@ import {
 	isCalculatedLatestItemKey,
 	isMappingItemKey,
 	type Item,
-	type ItemKey,
+	type ItemKey
 } from './types';
 
 export function clamp(value: number, min: number, max: number) {
@@ -32,7 +32,10 @@ export function formatDateTime(value: Date | number) {
 	}).format(value);
 }
 
-export function getSortValue(item: Item, key: ItemKey): string | number | undefined {
+export function getSortValue(
+	item: Item,
+	key: ItemKey
+): string | number | undefined {
 	if (isCalculatedLatestItemKey(key)) {
 		return item.latest[key];
 	}
@@ -43,8 +46,12 @@ export function getSortValue(item: Item, key: ItemKey): string | number | undefi
 	return undefined;
 }
 
-export function getSortUrl(current: string, column: string, direction: number = 1): string{
-	if(current !== column){
+export function getSortUrl(
+	current: string,
+	column: string,
+	direction: number = 1
+): string {
+	if (current !== column) {
 		return `/?column=${column}&direction=${-1}`;
 	}
 
