@@ -36,7 +36,6 @@ export function getSortValue(
 	item: Item,
 	key: ItemKey
 ): string | boolean | number | undefined {
-
 	if (isCalculatedLatestItemKey(key)) {
 		return item.latest[key];
 	}
@@ -48,14 +47,10 @@ export function getSortValue(
 	return undefined;
 }
 
-export function getSortUrl(
-	current: string,
-	column: string,
-	direction: number = 1
-): string {
-	if (current !== column) {
-		return `/?column=${column}&direction=${-1}`;
+export function formatValue(value: number) {
+	if (value === 0) {
+		return '?';
 	}
 
-	return `/?column=${column}&direction=${-1 * direction}`;
+	return formatNumber(value);
 }

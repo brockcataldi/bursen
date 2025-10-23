@@ -2,10 +2,10 @@
 	type Props = {
 		page: number;
 		max: number;
-		onChange: (page: number) => void
+		onChange: (page: number) => void;
 	};
 
-	let { page, max, onChange}: Props = $props();
+	let { page, max, onChange }: Props = $props();
 </script>
 
 <div class="grid w-full place-items-center py-2">
@@ -15,13 +15,17 @@
 		{/if}
 
 		{#if page > 1}
-			<button class="btn join-item" onclick={() => onChange(page - 1)}>Prev</button>
+			<button class="btn join-item" onclick={() => onChange(page - 1)}
+				>Prev</button
+			>
 		{/if}
 
 		{#each { length: 3 } as _, i}
 			{@const index = page - 3 + i}
 			{#if index > 0}
-				<button class="btn join-item" onclick={() => onChange(index)}>{index}</button>
+				<button class="btn join-item" onclick={() => onChange(index)}
+					>{index}</button
+				>
 			{/if}
 		{/each}
 
@@ -30,12 +34,16 @@
 		{#each { length: 3 } as _, i}
 			{@const index = page + 1 + i}
 			{#if index < max}
-				<button class="btn join-item"  onclick={() => onChange(index)}>{index}</button>
+				<button class="btn join-item" onclick={() => onChange(index)}
+					>{index}</button
+				>
 			{/if}
 		{/each}
 
 		{#if page <= max}
-			<button class="btn join-item" onclick={() => onChange(page + 1)}>Next</button>
+			<button class="btn join-item" onclick={() => onChange(page + 1)}
+				>Next</button
+			>
 		{/if}
 
 		{#if page !== max}

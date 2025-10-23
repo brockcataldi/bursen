@@ -1,3 +1,5 @@
+import z from 'zod';
+
 export interface LatestResponse {
 	data: { [id: number]: LatestItem };
 }
@@ -81,13 +83,25 @@ export type Item = MappingItem & {
 	latest: CalculatedLatestItem;
 };
 
-export type TransactionType = 'Buy' | 'Sell' | 'Transfer';
-
-export interface Transaction {
-	date: Date;
+export type Transaction = {
 	id: string;
-	type: TransactionType;
-	transaction: string;
-	price: number;
+	label: string;
+	type: 'buy' | 'sell' | 'transfer';
+	item?: number;
+	value: number;
 	quantity: number;
+};
+
+export const TransactionSchema = z.object({
+	id: z.string(),
+	date: z.date(),
+	label: z.string(),
+	type: z.enum(['buy', 'sell', 'transfer']),
+	item: z.number().optional(),
+	value: z.number(),
+	quantity: z.number()
+});
+
+export function isTransaction(value: any): value is Transaction {
+	return TransactionSchema.safeParse(value).success;
 }
