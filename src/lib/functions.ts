@@ -54,3 +54,26 @@ export function formatValue(value: number) {
 
 	return formatNumber(value);
 }
+
+export function formatCurrency(value: number) {
+	const sign = Math.sign(value);
+	value = Math.abs(value);
+
+	const billion = 1_000_000_000;
+
+	if (value >= billion) {
+		return `${sign === -1 ? '-' : ''}${(value / billion).toFixed(2)}B`;
+	}
+
+	const million = 1_000_000;
+	if (value >= million) {
+		return `${sign === -1 ? '-' : ''}${(value / million).toFixed(2)}M`;
+	}
+
+	const thousand = 1_000;
+	if (value >= thousand) {
+		return `${sign === -1 ? '-' : ''}${(value / thousand).toFixed(2)}K`;
+	}
+
+	return `${sign === -1 ? '-' : ''}${value}`;
+}

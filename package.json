@@ -38,6 +38,7 @@
 		"vite": "^7.1.7"
 	},
 	"dependencies": {
+		"chart.js": "^4.5.1",
 		"daisyui": "^5.3.0",
 		"isomorphic-dompurify": "^2.29.0",
 		"zod": "^4.1.12"

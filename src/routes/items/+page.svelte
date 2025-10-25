@@ -1,11 +1,14 @@
 <script lang="ts">
-	import { type ItemKey } from '$lib/types.js';
+	import { goto } from '$app/navigation';
+
+	import { type ItemKey, type Item } from '$lib/types.js';
 	import { formatValue, getSortValue } from '$lib/functions';
 	import { PAGE_SIZE } from '$lib/constants.js';
 	import { formatNumber } from '$lib/functions';
 
 	import Pagination from '$lib/components/pagination.svelte';
 	import SortIcon from '$lib/components/sort-icon.svelte';
+	import { addEntry } from '$lib/stores/ledger.js';
 
 	let { data } = $props();
 
@@ -48,6 +51,30 @@
 		}
 		direction = direction * -1;
 	}
+
+	function onClickLow(item: Item) {
+		addEntry({
+			id: crypto.randomUUID(),
+			label: item.name,
+			type: 'buy',
+			value: item.latest.low,
+			quantity: 1
+		});
+
+		goto('/ledger');
+	}
+
+	function onClickSell(item: Item) {
+		addEntry({
+			id: crypto.randomUUID(),
+			label: item.name,
+			type: 'sell',
+			value: item.latest.sell,
+			quantity: 1
+		});
+
+		goto('/ledger');
+	}
 </script>
 
 <header class="p-4">
@@ -59,9 +86,9 @@
 	</div>
 </header>
 <div
-	class="mx-4 my-0 overflow-x-auto rounded-l border border-base-content/8 bg-base-100"
+	class="mx-4 my-0 rounded-l border border-base-content/8 bg-base-100"
 >
-	<table class="table-pin-rows table table-fixed table-zebra">
+	<table class="table table-fixed table-zebra">
 		<thead>
 			<tr>
 				<th class="w-6"></th>
@@ -133,8 +160,22 @@
 					<td><a href={`/items/${item.id}`}>{item.name}</a></td>
 					<td class="text-right">{formatValue(item.limit)}</td>
 					<td class="text-right">{formatNumber(item.volume)}</td>
-					<td class="text-right">{formatNumber(item.latest.low)}</td>
-					<td class="text-right">{formatNumber(item.latest.sell)}</td>
+					<td class="text-right">
+						<button
+							class="btn font-normal btn-ghost tooltip tooltip-bottom"
+							data-tip="Add to ledger"
+							onclick={() => onClickLow(item)}
+							>{formatNumber(item.latest.low)}</button
+						>
+					</td>
+					<td class="text-right">
+						<button
+							class="btn font-normal btn-ghost tooltip tooltip-bottom"
+							onclick={() => onClickSell(item)}
+							data-tip="Add to ledger"
+							>{formatNumber(item.latest.sell)}</button
+						>
+					</td>
 					{#if sign === 1}
 						<td class="bg-success text-right text-success-content"
 							>{formatNumber(item.latest.margin)}</td

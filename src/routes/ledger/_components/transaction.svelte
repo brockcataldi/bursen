@@ -8,18 +8,36 @@
 	import ItemSelector from './item-selector.svelte';
 
 	type Props = {
+		allowReordering: boolean;
 		index: number;
 		max: number;
 		entry: Transaction;
 		items: Item[];
+		onChange: (entry: Transaction) => void;
 		onDelete: (entry: string) => void;
-		onMoveUp: (index: number) => void;
-		onMoveDown: (index: number) => void;
-		onDuplicate: (index: number) => void;
+		onMoveUp: (entry: string) => void;
+		onMoveDown: (entry: string) => void;
+		onDuplicate: (entry: string) => void;
 	};
 
-	let { index, max, entry, items, onDelete, onMoveUp, onMoveDown, onDuplicate }: Props =
-		$props();
+	let {
+		allowReordering,
+		index,
+		max,
+		entry,
+		items,
+		onDelete,
+		onChange,
+		onMoveUp,
+		onMoveDown,
+		onDuplicate
+	}: Props = $props();
+
+	let localEntry = $state(entry);
+
+	$effect(() => {
+		onChange(localEntry);
+	});
 
 	function handleItemChange(value: string | Item) {
 		if (typeof value === 'string') {
@@ -54,25 +72,25 @@
 	}
 
 	function handleMoveUp() {
-		onMoveUp(index);
+		onMoveUp(entry.id);
 	}
 
 	function handleMoveDown() {
-		onMoveDown(index);
+		onMoveDown(entry.id);
 	}
 
 	function handleDuplicate() {
-		onDuplicate(index);
+		onDuplicate(entry.id);
 	}
 </script>
 
 <div class="join-horizontal join w-full">
-	<label class="floating-label" for={`type-${entry.id}`}>
+	<label class="floating-label" for={`type-${localEntry.id}`}>
 		<span>Type</span>
 		<select
-			id={`type-${entry.id}`}
+			id={`type-${localEntry.id}`}
 			class="select w-30 rounded-l-md"
-			bind:value={entry.type}
+			bind:value={localEntry.type}
 			onchange={handleTypeChange}
 		>
 			<option value="transfer">Transfer</option>
@@ -83,40 +101,40 @@
 
 	{#if entry.type !== 'transfer'}
 		<ItemSelector
-			id={`item-${entry.id}`}
-			value={entry.label}
-			type={entry.type}
+			id={`item-${localEntry.id}`}
+			value={localEntry.label}
+			type={localEntry.type}
 			{items}
 			onChange={handleItemChange}
 		/>
 	{:else}
-		<label class="floating-label w-full" for={`label-${entry.id}`}>
+		<label class="floating-label w-full" for={`label-${localEntry.id}`}>
 			<span>Label</span>
 			<input
-				id={`label-${entry.id}`}
+				id={`label-${localEntry.id}`}
 				type="text"
 				class="input w-full"
-				bind:value={entry.label}
+				bind:value={localEntry.label}
 			/>
 		</label>
 	{/if}
 
-	<label class="floating-label" for={`value-${entry.id}`}>
+	<label class="floating-label" for={`value-${localEntry.id}`}>
 		<span>Value</span>
 		<input
-			id={`value-${entry.id}`}
+			id={`value-${localEntry.id}`}
 			type="number"
 			placeholder="0"
 			class="input w-36"
-			bind:value={entry.value}
+			bind:value={localEntry.value}
 		/>
 	</label>
 
 	{#if entry.type === 'buy' || entry.type === 'sell'}
-		<label class="floating-label" for={`quantity-${entry.id}`}>
+		<label class="floating-label" for={`quantity-${localEntry.id}`}>
 			<span>Quantity</span>
 			<input
-				id={`quantity-${entry.id}`}
+				id={`quantity-${localEntry.id}`}
 				type="number"
 				placeholder="0"
 				class="input w-36"
@@ -125,7 +143,7 @@
 		</label>
 	{/if}
 
-	{#if index !== 0}
+	{#if allowReordering && index !== 0}
 		<button class="btn btn-square btn-outline" onclick={handleMoveUp}>
 			<span class="size-4">
 				<ArrowUp />
@@ -133,7 +151,8 @@
 			<span class="sr-only">Move up</span>
 		</button>
 	{/if}
-	{#if index !== max - 1}
+
+	{#if allowReordering && index !== max - 1}
 		<button class="btn btn-square btn-outline" onclick={handleMoveDown}>
 			<span class="size-4">
 				<ArrowDown />
@@ -141,6 +160,7 @@
 			<span class="sr-only">Move down</span>
 		</button>
 	{/if}
+
 	<button class="btn btn-square btn-outline" onclick={handleDuplicate}>
 		<span class="size-4">
 			<DocumentDuplicate />

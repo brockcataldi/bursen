@@ -97,7 +97,6 @@ export const TransactionSchema = z.object({
 	date: z.date(),
 	label: z.string(),
 	type: z.enum(['buy', 'sell', 'transfer']),
-	item: z.number().optional(),
 	value: z.number(),
 	quantity: z.number()
 });
@@ -105,3 +104,8 @@ export const TransactionSchema = z.object({
 export function isTransaction(value: any): value is Transaction {
 	return TransactionSchema.safeParse(value).success;
 }
+
+export type ChartTransaction = {
+	label: string;
+	value: number;
+};

@@ -116,7 +116,11 @@
 				>
 					<div class="flex items-center gap-3">
 						{#if item.icon}
-							<img src={item.icon} alt={item.name} class="h-6 w-6" />
+							<img
+								src={item.icon}
+								alt={item.name}
+								class="h-6 w-6 object-contain"
+							/>
 						{/if}
 						<div>
 							<div class="font-medium">{item.name}</div>
