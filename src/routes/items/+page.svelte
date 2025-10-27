@@ -13,10 +13,10 @@
 	let { data } = $props();
 
 	let search = $state('');
-	let page = $state(1);
 	let column = $state<ItemKey>('margin');
 	let direction = $state<number>(-1);
 
+	let page = $state(1);
 	let max = $derived(Math.floor(data.items.length / PAGE_SIZE) + 1);
 	let filtered = $derived(
 		data.items
@@ -85,9 +85,7 @@
 		</div>
 	</div>
 </header>
-<div
-	class="mx-4 my-0 rounded-l border border-base-content/8 bg-base-100"
->
+<div class="mx-4 my-0 rounded-l border border-base-content/8 bg-base-100">
 	<table class="table table-fixed table-zebra">
 		<thead>
 			<tr>
@@ -104,7 +102,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'limit')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex flex-row items-center justify-start gap-2 text-right"
 					>
 						Buy Limit
 						<SortIcon current={column} {direction} column={'limit'} />
@@ -113,7 +111,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'volume')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex flex-row items-center justify-end gap-2"
 					>
 						Volume
 						<SortIcon current={column} {direction} column={'volume'} />
@@ -122,7 +120,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'low')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex flex-row items-center justify-end gap-2"
 					>
 						Buy Price
 						<SortIcon current={column} {direction} column={'low'} />
@@ -131,7 +129,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'sell')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex flex-row items-center justify-end gap-2"
 					>
 						Sell Price
 						<SortIcon current={column} {direction} column={'sell'} />
@@ -140,7 +138,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'margin')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex flex-row items-center justify-end gap-2"
 					>
 						Margin
 						<SortIcon current={column} {direction} column={'margin'} />
@@ -162,7 +160,7 @@
 					<td class="text-right">{formatNumber(item.volume)}</td>
 					<td class="text-right">
 						<button
-							class="btn font-normal btn-ghost tooltip tooltip-bottom"
+							class="tooltip btn tooltip-bottom font-normal btn-ghost"
 							data-tip="Add to ledger"
 							onclick={() => onClickLow(item)}
 							>{formatNumber(item.latest.low)}</button
@@ -170,10 +168,9 @@
 					</td>
 					<td class="text-right">
 						<button
-							class="btn font-normal btn-ghost tooltip tooltip-bottom"
+							class="tooltip btn tooltip-bottom font-normal btn-ghost"
 							onclick={() => onClickSell(item)}
-							data-tip="Add to ledger"
-							>{formatNumber(item.latest.sell)}</button
+							data-tip="Add to ledger">{formatNumber(item.latest.sell)}</button
 						>
 					</td>
 					{#if sign === 1}

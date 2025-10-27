@@ -6,7 +6,7 @@
 
 	import Drawer from '$lib/components/drawer.svelte';
 
-	let { children } = $props();
+	let { data, children } = $props();
 </script>
 
 <svelte:head>
@@ -16,7 +16,7 @@
 {#if page.url.pathname === '/'}
 	{@render children?.()}
 {:else}
-	<Drawer>
+	<Drawer when={data.when}>
 		{@render children?.()}
 	</Drawer>
 {/if}

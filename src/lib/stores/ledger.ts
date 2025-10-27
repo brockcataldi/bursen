@@ -19,6 +19,10 @@ function loadLedger() {
 
 export const ledger = writable<Transaction[]>(loadLedger());
 
+export function clearLedger() {
+	ledger.set([]);
+}
+
 export function addEntry(transaction?: Transaction) {
 	if (transaction) {
 		return ledger.update((value) => [...value, transaction]);

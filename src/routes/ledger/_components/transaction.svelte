@@ -145,26 +145,20 @@
 
 	{#if allowReordering && index !== 0}
 		<button class="btn btn-square btn-outline" onclick={handleMoveUp}>
-			<span class="size-4">
-				<ArrowUp />
-			</span>
+			<ArrowUp />
 			<span class="sr-only">Move up</span>
 		</button>
 	{/if}
 
 	{#if allowReordering && index !== max - 1}
 		<button class="btn btn-square btn-outline" onclick={handleMoveDown}>
-			<span class="size-4">
-				<ArrowDown />
-			</span>
+			<ArrowDown />
 			<span class="sr-only">Move down</span>
 		</button>
 	{/if}
 
 	<button class="btn btn-square btn-outline" onclick={handleDuplicate}>
-		<span class="size-4">
-			<DocumentDuplicate />
-		</span>
+		<DocumentDuplicate />
 		<span class="sr-only">Duplicate</span>
 	</button>
 	<button
@@ -172,9 +166,7 @@
 		onclick={handleDelete}
 		data-tip="Trash"
 	>
-		<span class="size-4">
-			<Trash />
-		</span>
+		<Trash />
 		<span class="sr-only">Delete</span>
 	</button>
 </div>

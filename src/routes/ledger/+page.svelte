@@ -9,11 +9,15 @@
 		duplicateEntry,
 		moveEntryUp,
 		moveEntryDown,
-		updateEntry
+		updateEntry,
+		clearLedger
 	} from '$lib/stores/ledger';
 
 	import Chart from './_components/chart.svelte';
 	import Transaction from './_components/transaction.svelte';
+
+	import Plus from '$lib/icons/plus.svelte';
+	import Trash from '$lib/icons/trash.svelte';
 
 	let { data } = $props();
 
@@ -53,7 +57,6 @@
 	});
 
 	let balance = $derived(chart.at(-1)?.value ?? 0);
-	let count = $derived($ledger.length);
 </script>
 
 <header
@@ -70,7 +73,7 @@
 		</div>
 		<div class="stat">
 			<div class="stat-title">Transactions</div>
-			<div class="stat-value">{count}</div>
+			<div class="stat-value">{max}</div>
 		</div>
 	</div>
 	<div>
@@ -113,9 +116,12 @@
 				/>
 			</li>
 		{/each}
-		<li class="flex flex-row gap-2">
+		<li class="flex w-full flex-row justify-between gap-2">
 			<button class="btn btn-outline btn-primary" onclick={() => addEntry()}
-				>Add Transaction</button
+				><Plus />Add Transaction</button
+			>
+			<button class="btn btn-outline btn-error" onclick={() => clearLedger()}
+				><Trash />Clear</button
 			>
 		</li>
 	</ul>

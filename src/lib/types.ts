@@ -109,3 +109,15 @@ export type ChartTransaction = {
 	label: string;
 	value: number;
 };
+
+export type ItemSetIndexes = {
+	set: number;
+	items: number[];
+};
+
+export type ItemSet = {
+	set: Item;
+	items: Item[];
+	cost: number;
+	margin: number;
+};

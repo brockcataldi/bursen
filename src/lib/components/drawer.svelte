@@ -1,15 +1,26 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { invalidateAll } from '$app/navigation';
 
 	import Home from '$lib/icons/home.svelte';
 	import QueueList from '$lib/icons/queue-list.svelte';
 	import ArrowPath from '$lib/icons/arrow-path.svelte';
+	import ArchiveBoxArrowDown from '$lib/icons/archive-box-arrow-down.svelte';
 
 	type Props = {
 		children: Snippet;
+		when?: number | null;
 	};
 
-	let { children }: Props = $props();
+	let { children, when }: Props = $props();
+
+	let refreshing = $state(false);
+
+	async function handleRefresh() {
+		refreshing = true;
+		await invalidateAll();
+		refreshing = false;
+	}
 </script>
 
 <div class="drawer-open drawer">
@@ -47,40 +58,31 @@
 				<hr class="my-2" />
 				<li>
 					<a
-						href="/sets"
+						href="/packing"
 						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
 						data-tip="Settings"
 					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							viewBox="0 0 24 24"
-							stroke-linejoin="round"
-							stroke-linecap="round"
-							stroke-width="2"
-							fill="none"
-							stroke="currentColor"
-							class="my-1.5 inline-block size-4"
-							><path d="M20 7h-9"></path><path d="M14 17H5"></path><circle
-								cx="17"
-								cy="17"
-								r="3"
-							></circle><circle cx="7" cy="7" r="3"></circle></svg
-						>
-						<span class="is-drawer-close:hidden">Item Sets</span>
+						<ArchiveBoxArrowDown />
+						<span class="is-drawer-close:hidden">Packing</span>
 					</a>
 				</li>
 			</ul>
 
 			<ul class="menu w-full">
 				<li>
-					<a
-						href="/"
-						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-						data-tip="Refresh"
+					<button
+						onclick={handleRefresh}
+						disabled={refreshing}
+						class="tooltip tooltip-right gap-2"
+						class:btn-disabled={refreshing}
+						data-tip="Last updated {when ? new Date(when).toLocaleString() : 'never'}"
 					>
 						<ArrowPath />
-						<span class="is-drawer-close:hidden">Refresh</span>
-					</a>
+						<div class="is-drawer-close:hidden flex flex-col items-start">
+							<span class="block">Refresh</span>
+							<span class="block text-xs">{when ? new Date(when).toLocaleString() : 'never'}</span>
+						</div>
+					</button>
 				</li>
 				<li>
 					<label
