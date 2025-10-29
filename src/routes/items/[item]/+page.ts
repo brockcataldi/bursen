@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 import z from 'zod';
 import type { PageLoad } from './$types';
 
@@ -8,14 +9,14 @@ export const load: PageLoad = async ({ parent, params }) => {
 	const { map } = await parent();
 
 	if (map === undefined) {
-		goto('/');
+		goto(resolve('/'));
 		return;
 	}
 
 	const id = IdSchema.safeParse(params.item);
 
 	if (!id.success) {
-		goto('/');
+		goto(resolve('/'));
 		return;
 	}
 

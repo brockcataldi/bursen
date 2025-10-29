@@ -15,13 +15,13 @@ export const load: PageLoad = async ({ parent }) => {
 		.map((set) => {
 			const itemSet = map[set.set];
 			const items = set.items.map((item) => map[item]);
-			const setCost = items.reduce((acc, item) => acc + item.latest.low, 0);
+			const setCost = items.reduce((acc, item) => acc + item.latest.sell, 0);
 
 			return {
 				set: itemSet,
 				items,
 				cost: setCost,
-				margin: itemSet.latest.sell - setCost
+				margin: setCost - itemSet.latest.low
 			};
 		})
 		.sort((a, b) => b.margin - a.margin);

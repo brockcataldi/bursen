@@ -1,11 +1,14 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { resolve } from '$app/paths';
 	import { invalidateAll } from '$app/navigation';
 
 	import Home from '$lib/icons/home.svelte';
 	import QueueList from '$lib/icons/queue-list.svelte';
 	import ArrowPath from '$lib/icons/arrow-path.svelte';
 	import ArchiveBoxArrowDown from '$lib/icons/archive-box-arrow-down.svelte';
+	import ArchiveBoxXMark from '$lib/icons/archive-box-x-mark.svelte';
+	import Beaker from '$lib/icons/beaker.svelte';
 
 	type Props = {
 		children: Snippet;
@@ -36,7 +39,7 @@
 			<ul class="menu w-full grow">
 				<li>
 					<a
-						href="/items"
+						href={resolve('/items')}
 						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
 						data-tip="Homepage"
 					>
@@ -47,7 +50,7 @@
 
 				<li>
 					<a
-						href="/ledger"
+						href={resolve('/ledger')}
 						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
 						data-tip="Ledger"
 					>
@@ -58,12 +61,32 @@
 				<hr class="my-2" />
 				<li>
 					<a
-						href="/packing"
+						href={resolve('/decanting')}
 						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-						data-tip="Settings"
+						data-tip="Decanting"
+					>
+						<Beaker />
+						<span class="is-drawer-close:hidden">Decanting</span>
+					</a>
+				</li>
+				<li>
+					<a
+						href={resolve('/packing')}
+						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+						data-tip="Packing"
 					>
 						<ArchiveBoxArrowDown />
 						<span class="is-drawer-close:hidden">Packing</span>
+					</a>
+				</li>
+				<li>
+					<a
+						href={resolve('/unpacking')}
+						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+						data-tip="Unpacking"
+					>
+						<ArchiveBoxXMark />
+						<span class="is-drawer-close:hidden">Unpacking</span>
 					</a>
 				</li>
 			</ul>
@@ -75,12 +98,16 @@
 						disabled={refreshing}
 						class="tooltip tooltip-right gap-2"
 						class:btn-disabled={refreshing}
-						data-tip="Last updated {when ? new Date(when).toLocaleString() : 'never'}"
+						data-tip="Last updated {when
+							? new Date(when).toLocaleString()
+							: 'never'}"
 					>
 						<ArrowPath />
-						<div class="is-drawer-close:hidden flex flex-col items-start">
+						<div class="flex flex-col items-start is-drawer-close:hidden">
 							<span class="block">Refresh</span>
-							<span class="block text-xs">{when ? new Date(when).toLocaleString() : 'never'}</span>
+							<span class="block text-xs"
+								>{when ? new Date(when).toLocaleString() : 'never'}</span
+							>
 						</div>
 					</button>
 				</li>

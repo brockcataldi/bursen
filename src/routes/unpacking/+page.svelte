@@ -51,29 +51,20 @@
 							</tr>
 						</thead>
 						<tbody>
-							{#each set.items as item (item.id)}
-								<tr>
-									<td>
-										<div class="grid h-6 w-6 place-items-center">
-											<img src={item.icon} alt={item.name} />
-										</div>
-									</td>
-									<td><a href={resolve(`/items/${item.id}`)}>{item.name}</a></td
-									>
-									<td class="text-right">{formatValue(item.limit)}</td>
-									<td class="text-right">{formatNumber(item.volume)}</td>
-									<td class="text-right">
-										{formatNumber(item.latest.low)}
-									</td>
-								</tr>
-							{/each}
 							<tr>
-								<td></td>
-								<td>Items Cost</td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
+								<td>
+									<div class="grid h-6 w-6 place-items-center">
+										<img src={set.set.icon} alt={set.set.name} />
+									</div>
+								</td>
+								<td
+									><a href={resolve(`/items/${set.set.id}`)}>{set.set.name}</a
+									></td
+								>
+								<td class="text-right">{formatValue(set.set.limit)}</td>
+								<td class="text-right">{formatNumber(set.set.volume)}</td>
 								<td class="text-right">
-									{formatNumber(set.cost)}
+									{formatNumber(set.set.latest.low)}
 								</td>
 							</tr>
 						</tbody>
@@ -89,20 +80,29 @@
 							</tr>
 						</thead>
 						<tbody>
+							{#each set.items as item (item.id)}
+								<tr>
+									<td>
+										<div class="grid h-6 w-6 place-items-center">
+											<img src={item.icon} alt={item.name} />
+										</div>
+									</td>
+									<td><a href={resolve(`/items/${item.id}`)}>{item.name}</a></td
+									>
+									<td class="text-right">{formatValue(item.limit)}</td>
+									<td class="text-right">{formatNumber(item.volume)}</td>
+									<td class="text-right">
+										{formatNumber(item.latest.sell)}
+									</td>
+								</tr>
+							{/each}
 							<tr>
-								<td>
-									<div class="grid h-6 w-6 place-items-center">
-										<img src={set.set.icon} alt={set.set.name} />
-									</div>
-								</td>
-								<td
-									><a href={resolve(`/items/${set.set.id}`)}>{set.set.name}</a
-									></td
-								>
-								<td class="text-right">{formatValue(set.set.limit)}</td>
-								<td class="text-right">{formatNumber(set.set.volume)}</td>
+								<td></td>
+								<td>Items Value</td>
+								<td class="text-right"></td>
+								<td class="text-right"></td>
 								<td class="text-right">
-									{formatNumber(set.set.latest.sell)}
+									{formatNumber(set.cost)}
 								</td>
 							</tr>
 							<tr>

@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { resolve } from '$app/paths';
+</script>
+
 <main class="mx-auto max-w-3xl">
 	<header class="px-4 py-10">
 		<h1 class="text-4xl font-bold">Bursen</h1>
@@ -9,7 +13,7 @@
 			<div class="card-body">
 				<h2 class="card-title">Index</h2>
 				<p class="card-text">All of the items in the database.</p>
-				<a href="/items" class="btn btn-primary">View</a>
+				<a href={resolve('/items')} class="btn btn-primary">View</a>
 			</div>
 		</div>
 
@@ -17,7 +21,7 @@
 			<div class="card-body">
 				<h2 class="card-title">Ledger</h2>
 				<p class="card-text">Track your transactions.</p>
-				<a href="/ledger" class="btn btn-primary">View</a>
+				<a href={resolve('/ledger')} class="btn btn-primary">View</a>
 			</div>
 		</div>
 	</div>
@@ -28,7 +32,7 @@
 			<div class="card-body">
 				<h2 class="card-title">Item Sets</h2>
 				<p class="card-text">All of the item sets in the database.</p>
-				<a href="/sets" class="btn btn-primary">View</a>
+				<a href={resolve('/packing')} class="btn btn-primary">View</a>
 			</div>
 		</div>
 	</div>

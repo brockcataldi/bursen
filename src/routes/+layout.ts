@@ -25,8 +25,8 @@ const getMapping = async (): Promise<MappingResponse | null> => {
 		if (Date.now() - parseInt(last) > TTL) {
 			try {
 				return JSON.parse(cache) as MappingResponse;
-			} catch (err) {
-				// bro I don't care fetch it.
+			} catch {
+				// bro I don't care parse it. just fetch it.
 			}
 		}
 	}

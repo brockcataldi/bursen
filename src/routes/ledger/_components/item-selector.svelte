@@ -105,7 +105,7 @@
 		<div
 			class="absolute z-50 mt-1 max-h-60 w-65 overflow-y-auto rounded-md border border-base-300 bg-base-100 shadow-lg"
 		>
-			{#each filteredItems as item, index}
+			{#each filteredItems as item, index (item.id)}
 				<button
 					type="button"
 					class="w-full px-4 py-2 text-left hover:bg-base-200 focus:bg-base-200 focus:outline-none {selectedIndex ===
@@ -127,11 +127,11 @@
 							{#if item.value}
 								<div class="text-sm text-base-content/70">
 									{#if type === 'buy'}
-										Low: {item.latest.low.toLocaleString()} GP
+										Low: {item.latest.low.toLocaleString()}
 									{:else if type === 'sell'}
-										Sell: {item.latest.sell.toLocaleString()} GP
+										Sell: {item.latest.sell.toLocaleString()}
 									{:else}
-										Value: {item.value.toLocaleString()} GP
+										Value: {item.value.toLocaleString()}
 									{/if}
 								</div>
 							{/if}

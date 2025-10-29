@@ -4,7 +4,7 @@
 	viewBox="0 0 24 24"
 	stroke-width="1.5"
 	stroke="currentColor"
-	class="my-1.5 inline-block size-4"
+	class="inline-block size-4"
 >
 	<path
 		stroke-linecap="round"

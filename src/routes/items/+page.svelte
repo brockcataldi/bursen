@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	import { type ItemKey, type Item } from '$lib/types.js';
 	import { formatValue, getSortValue } from '$lib/functions';
@@ -15,16 +16,19 @@
 	let search = $state('');
 	let column = $state<ItemKey>('margin');
 	let direction = $state<number>(-1);
-
 	let page = $state(1);
-	let max = $derived(Math.floor(data.items.length / PAGE_SIZE) + 1);
+
 	let filtered = $derived(
-		data.items
-			.filter((item) =>
-				search.trim()
-					? item.name.toLowerCase().includes(search.toLowerCase())
-					: true
-			)
+		data.items.filter((item) =>
+			search.trim()
+				? item.name.toLowerCase().includes(search.toLowerCase())
+				: true
+		)
+	);
+
+	let max = $derived(Math.floor(filtered.length / PAGE_SIZE) + 1);
+	let paginated = $derived(
+		filtered
 			.sort((a, b) => {
 				const aVal = getSortValue(a, column);
 				const bVal = getSortValue(b, column);
@@ -61,7 +65,7 @@
 			quantity: 1
 		});
 
-		goto('/ledger');
+		goto(resolve('/ledger'));
 	}
 
 	function onClickSell(item: Item) {
@@ -73,7 +77,7 @@
 			quantity: 1
 		});
 
-		goto('/ledger');
+		goto(resolve('/ledger'));
 	}
 </script>
 
@@ -96,7 +100,7 @@
 						class="flex flex-row items-center justify-start gap-2"
 					>
 						Name
-						<SortIcon current={column} {direction} column={'name'} />
+						<SortIcon current={column} {direction} column="name" />
 					</button>
 				</th>
 				<th class="w-36">
@@ -105,7 +109,7 @@
 						class="flex flex-row items-center justify-start gap-2 text-right"
 					>
 						Buy Limit
-						<SortIcon current={column} {direction} column={'limit'} />
+						<SortIcon current={column} {direction} column="limit" />
 					</button>
 				</th>
 				<th class="w-36">
@@ -114,7 +118,7 @@
 						class="flex flex-row items-center justify-end gap-2"
 					>
 						Volume
-						<SortIcon current={column} {direction} column={'volume'} />
+						<SortIcon current={column} {direction} column="volume" />
 					</button>
 				</th>
 				<th class="w-36">
@@ -123,7 +127,7 @@
 						class="flex flex-row items-center justify-end gap-2"
 					>
 						Buy Price
-						<SortIcon current={column} {direction} column={'low'} />
+						<SortIcon current={column} {direction} column="low" />
 					</button>
 				</th>
 				<th class="w-36">
@@ -132,7 +136,7 @@
 						class="flex flex-row items-center justify-end gap-2"
 					>
 						Sell Price
-						<SortIcon current={column} {direction} column={'sell'} />
+						<SortIcon current={column} {direction} column="sell" />
 					</button>
 				</th>
 				<th class="w-36">
@@ -141,13 +145,13 @@
 						class="flex flex-row items-center justify-end gap-2"
 					>
 						Margin
-						<SortIcon current={column} {direction} column={'margin'} />
+						<SortIcon current={column} {direction} column="margin" />
 					</button>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
-			{#each filtered as item}
+			{#each paginated as item (item.id)}
 				{@const sign = Math.sign(item.latest.margin)}
 				<tr>
 					<td>
@@ -155,7 +159,7 @@
 							<img src={item.icon} alt={item.name} />
 						</div>
 					</td>
-					<td><a href={`/items/${item.id}`}>{item.name}</a></td>
+					<td><a href={resolve(`/items/${item.id}`)}>{item.name} - {item.id}</a></td>
 					<td class="text-right">{formatValue(item.limit)}</td>
 					<td class="text-right">{formatNumber(item.volume)}</td>
 					<td class="text-right">

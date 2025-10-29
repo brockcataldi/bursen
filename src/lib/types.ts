@@ -101,7 +101,7 @@ export const TransactionSchema = z.object({
 	quantity: z.number()
 });
 
-export function isTransaction(value: any): value is Transaction {
+export function isTransaction(value: unknown): value is Transaction {
 	return TransactionSchema.safeParse(value).success;
 }
 
@@ -121,3 +121,40 @@ export type ItemSet = {
 	cost: number;
 	margin: number;
 };
+
+export type PotionIndexes = {
+	label: string;
+	doses: {
+		1: number;
+		2: number;
+		3: number;
+		4: number;
+	};
+};
+
+export type Potion = {
+	label: string;
+	doses: {
+		1: Item;
+		2: Item;
+		3: Item;
+		4: Item;
+	};
+};
+
+export type DecantRecipe = {
+	id: string;
+	label: string;
+	from: number;
+	fromIcon: string;
+	to: number;
+	toIcon: string;
+	input: { item: Item; count: number }[];
+	output: { item: Item; count: number }[];
+};
+
+export type Decant = {
+	inputValue: number;
+	outputValue: number;
+	margin: number;
+} & DecantRecipe;

@@ -20,7 +20,7 @@
 			>
 		{/if}
 
-		{#each { length: 3 } as _, i}
+		{#each { length: 3 } as _, i (page - 3 + i)}
 			{@const index = page - 3 + i}
 			{#if index > 0}
 				<button class="btn join-item" onclick={() => onChange(index)}
@@ -31,7 +31,7 @@
 
 		<span class="btn btn-active join-item" aria-current="page">{page}</span>
 
-		{#each { length: 3 } as _, i}
+		{#each { length: 3 } as _, i (page + 1 + i)}
 			{@const index = page + 1 + i}
 			{#if index < max}
 				<button class="btn join-item" onclick={() => onChange(index)}
@@ -40,7 +40,7 @@
 			{/if}
 		{/each}
 
-		{#if page <= max}
+		{#if page <= max - 1}
 			<button class="btn join-item" onclick={() => onChange(page + 1)}
 				>Next</button
 			>

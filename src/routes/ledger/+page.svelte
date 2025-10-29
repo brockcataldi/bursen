@@ -37,14 +37,10 @@
 	});
 
 	let profit = $derived.by(() => {
-		let transfers = 0;
 		let buys = 0;
 		let sells = 0;
 
 		for (const entry of $ledger) {
-			if (entry.type === 'transfer') {
-				transfers += entry.value;
-			}
 			if (entry.type === 'buy') {
 				buys += entry.value * entry.quantity;
 			}
