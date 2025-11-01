@@ -1,7 +1,7 @@
-import { writable } from 'svelte/store';
-import type { Transaction } from '../types';
+import { derived, writable } from 'svelte/store';
+import type { ChartTransaction, Transaction } from '../types';
 
-function loadLedger() {
+function load() {
 	const ledger = localStorage.getItem('ledger');
 	if (ledger) {
 		return JSON.parse(ledger);
@@ -17,13 +17,46 @@ function loadLedger() {
 	];
 }
 
-export const ledger = writable<Transaction[]>(loadLedger());
+export const ledger = writable<Transaction[]>(load());
+export const length = derived(ledger, ($ledger) => $ledger.length);
+export const chart = derived(ledger, ($ledger) => {
+	let value = 0;
+	return $ledger.map((entry): ChartTransaction => {
+		value += (entry.type === 'buy' ? -1 : 1) * entry.value * entry.quantity;
+		return {
+			label: entry.label,
+			value
+		};
+	});
+});
 
-export function clearLedger() {
+export const profit = derived(ledger, (ledger) => {
+	let buys = 0;
+	let sells = 0;
+
+	for (const entry of ledger) {
+		if (entry.type === 'buy') {
+			buys += entry.value * entry.quantity;
+		}
+		if (entry.type === 'sell') {
+			sells += entry.value * entry.quantity;
+		}
+	}
+
+	return sells - buys;
+});
+
+export const balance = derived(chart, ($chart) => $chart.at(-1)?.value ?? 0);
+
+ledger.subscribe((value) => {
+	localStorage.setItem('ledger', JSON.stringify(value));
+});
+
+export function onClear() {
 	ledger.set([]);
 }
 
-export function addEntry(transaction?: Transaction) {
+export function onAdd(transaction?: Transaction) {
 	if (transaction) {
 		return ledger.update((value) => [...value, transaction]);
 	}
@@ -40,13 +73,13 @@ export function addEntry(transaction?: Transaction) {
 	]);
 }
 
-export function deleteEntry(id: string) {
+export function onDelete(id: string) {
 	ledger.update((value) =>
 		value.filter((transaction) => transaction.id !== id)
 	);
 }
 
-export function updateEntry(entry: Transaction) {
+export function onChange(entry: Transaction) {
 	ledger.update((value) =>
 		value.map((transaction) =>
 			transaction.id === entry.id ? entry : transaction
@@ -54,7 +87,7 @@ export function updateEntry(entry: Transaction) {
 	);
 }
 
-export function duplicateEntry(id: string) {
+export function onDuplicate(id: string) {
 	ledger.update((value) => {
 		const entry = value.find((transaction) => transaction.id === id);
 		if (entry) {
@@ -64,7 +97,7 @@ export function duplicateEntry(id: string) {
 	});
 }
 
-export function moveEntryUp(id: string) {
+export function onMoveUp(id: string) {
 	ledger.update((value) => {
 		const index = value.findIndex((transaction) => transaction.id === id);
 		if (index > 0) {
@@ -76,7 +109,7 @@ export function moveEntryUp(id: string) {
 	});
 }
 
-export function moveEntryDown(id: string) {
+export function onMoveDown(id: string) {
 	ledger.update((value) => {
 		const index = value.findIndex((transaction) => transaction.id === id);
 		if (index < value.length - 1) {
@@ -87,7 +120,3 @@ export function moveEntryDown(id: string) {
 		return value;
 	});
 }
-
-ledger.subscribe((value) => {
-	localStorage.setItem('ledger', JSON.stringify(value));
-});

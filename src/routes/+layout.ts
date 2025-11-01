@@ -64,7 +64,7 @@ export const load: LayoutLoad = async ({ fetch }) => {
 			continue;
 		}
 
-		const icon = `${IMAGE_URL}${m.icon.replaceAll(' ', '_')}`;
+		const icon = `${IMAGE_URL}${encodeURIComponent(m.icon.replaceAll(' ', '_'))}`;
 		const tax = getSalesTax(l.high);
 		const sell = l.high - tax;
 

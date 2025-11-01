@@ -18,148 +18,161 @@
 	}
 </script>
 
-<ul>
+<ul class="join join-vertical m-4">
 	{#each filtered as potion (potion.id)}
 		{@const sign = Math.sign(potion.margin)}
 		{@const color =
 			sign === 1
-				? 'badge-success'
+				? 'bg-success text-success-content'
 				: sign === -1
-					? 'badge-error'
-					: 'badge-primary'}
-		<li>
-			<div class="collapse-arrow collapse border border-base-300 bg-base-100">
-				<input type="checkbox" name="potion-{potion.id}" />
-				<div class="collapse-title font-semibold">
-					<div class="flex flex-row items-center justify-between gap-2">
-						<div class="flex flex-row items-center justify-start gap-2">
-							<h2 class="flex flex-row items-center justify-start gap-2">
-								{potion.label}
-								<img
-									src={potion.fromIcon}
-									alt={`${potion.label} (${potion.from})`}
-									class="tooltip tooltip-bottom h-6 w-6 object-contain"
-									data-tip={`${potion.label} (${potion.from})`}
-								/>
-								to
-								<img
-									src={potion.toIcon}
-									alt={`${potion.label} (${potion.to})`}
-									class="tooltip tooltip-bottom h-6 w-6 object-contain"
-									data-tip={`${potion.label} (${potion.to})`}
-								/>
-							</h2>
+					? 'bg-error text-error-content'
+					: 'bg-primary text-primary-content'}
+		<li class="collapse-arrow collapse join-item border border-base-content/8 bg-base-100">
+			<input type="checkbox" name="potion-{potion.id}" />
+			<div class="collapse-title font-semibold">
+				<div class="flex flex-row items-center justify-between gap-2">
+					<div class="flex flex-row items-center justify-start gap-2">
+						<h2 class="flex flex-row items-center justify-start gap-2">
+							{potion.label}
+							<img
+								src={potion.fromIcon}
+								alt={`${potion.label} (${potion.from})`}
+								class="tooltip tooltip-bottom h-6 w-6 object-contain"
+								data-tip={`${potion.label} (${potion.from})`}
+							/>
+							to
+							<img
+								src={potion.toIcon}
+								alt={`${potion.label} (${potion.to})`}
+								class="tooltip tooltip-bottom h-6 w-6 object-contain"
+								data-tip={`${potion.label} (${potion.to})`}
+							/>
+						</h2>
+					</div>
+						<div class="flex flex-row items-center justify-end gap-2">
+							<div>
+								<p class="text-xs">Cost</p>
+								<div class="badge w-30 justify-start badge-outline">
+									{formatNumber(potion.inputValue)}
+								</div>
+							</div>
+							<div>
+								<p class="text-xs">Margin</p>
+								<div class="badge w-30 justify-start badge-outline {color}">
+									{formatNumber(potion.margin)}
+								</div>
+							</div>
 						</div>
-						<div class="badge {color}">{formatNumber(potion.margin)}</div>
 					</div>
 				</div>
-				<div class="collapse-content">
-					<table class="table table-fixed table-zebra">
-						<thead>
+			<div class="collapse-content">
+				<div class="border border-base-content/8 bg-base-100">
+				<table class="table table-fixed table-zebra">
+					<thead>
+						<tr>
+							<th class="w-6"></th>
+							<th class="w-full"> Name </th>
+							<th class="w-36 text-right"> Buy Limit </th>
+							<th class="w-36 text-right"> Volume </th>
+							<th class="w-36 text-right"> Buy Price </th>
+							<th class="w-36 text-right"> Count </th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each potion.input as item (item.item.id)}
 							<tr>
-								<th class="w-6"></th>
-								<th class="w-full"> Name </th>
-								<th class="w-36 text-right"> Buy Limit </th>
-								<th class="w-36 text-right"> Volume </th>
-								<th class="w-36 text-right"> Buy Price </th>
-								<th class="w-36 text-right"> Count </th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each potion.input as item (item.item.id)}
-								<tr>
-									<td>
-										<div class="grid h-6 w-6 place-items-center">
-											<img src={item.item.icon} alt={item.item.name} />
-										</div>
-									</td>
-									<td
-										><a href={resolve(`/items/${item.item.id}`)}
-											>{item.item.name}</a
-										></td
-									>
-									<td class="text-right">{formatValue(item.item.limit)}</td>
-									<td class="text-right">{formatNumber(item.item.volume)}</td>
-									<td class="text-right">
-										{formatNumber(item.item.latest.low)}
-									</td>
-									<td class="text-right">{formatNumber(item.count)}</td>
-								</tr>
-							{/each}
-							<tr>
-								<td></td>
-								<td>Input Cost</td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
-								<td class="text-right">
-									{formatNumber(potion.inputValue)}
+								<td>
+									<div class="grid h-6 w-6 place-items-center">
+										<img src={item.item.icon} alt={item.item.name} />
+									</div>
 								</td>
-							</tr>
-						</tbody>
-					</table>
-					<table class="table table-fixed table-zebra">
-						<thead>
-							<tr>
-								<th class="w-6"></th>
-								<th class="w-full"> Name </th>
-								<th class="w-36 text-right"> Limit </th>
-								<th class="w-36 text-right"> Volume </th>
-								<th class="w-36 text-right"> Sell Price </th>
-								<th class="w-36 text-right"> Count </th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each potion.output as item (item.item.id)}
-								<tr>
-									<td>
-										<div class="grid h-6 w-6 place-items-center">
-											<img src={item.item.icon} alt={item.item.name} />
-										</div>
-									</td>
-									<td
-										><a href={resolve(`/items/${item.item.id}`)}
-											>{item.item.name}</a
-										></td
-									>
-									<td class="text-right">{formatValue(item.item.limit)}</td>
-									<td class="text-right">{formatNumber(item.item.volume)}</td>
-									<td class="text-right">
-										{formatNumber(item.item.latest.low)}
-									</td>
-									<td class="text-right">{formatNumber(item.count)}</td>
-								</tr>
-							{/each}
-							<tr>
-								<td></td>
-								<td>Output Value</td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
+								<td
+									><a href={resolve(`/items/${item.item.id}`)}
+										>{item.item.name}</a
+									></td
+								>
+								<td class="text-right">{formatValue(item.item.limit)}</td>
+								<td class="text-right">{formatNumber(item.item.volume)}</td>
 								<td class="text-right">
-									{formatNumber(potion.outputValue)}
+									{formatNumber(item.item.latest.low)}
 								</td>
+								<td class="text-right">{formatNumber(item.count)}</td>
 							</tr>
+						{/each}
+						<tr>
+							<td></td>
+							<td>Input Cost</td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right">
+								{formatNumber(potion.inputValue)}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<table class="table table-fixed table-zebra">
+					<thead>
+						<tr>
+							<th class="w-6"></th>
+							<th class="w-full"> Name </th>
+							<th class="w-36 text-right"> Limit </th>
+							<th class="w-36 text-right"> Volume </th>
+							<th class="w-36 text-right"> Sell Price </th>
+							<th class="w-36 text-right"> Count </th>
+						</tr>
+					</thead>
+					<tbody>
+						{#each potion.output as item (item.item.id)}
 							<tr>
-								<td></td>
-								<td>Difference</td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
-								<td class="text-right"></td>
-								{#if sign === 1}
-									<td class="bg-success text-right text-success-content"
-										>{formatNumber(potion.margin)}</td
-									>
-								{:else if sign === -1}
-									<td class="bg-error text-right text-error-content"
-										>{formatNumber(potion.margin)}</td
-									>
-								{:else}
-									<td class="text-right">{formatNumber(potion.margin)}</td>
-								{/if}
+								<td>
+									<div class="grid h-6 w-6 place-items-center">
+										<img src={item.item.icon} alt={item.item.name} />
+									</div>
+								</td>
+								<td
+									><a href={resolve(`/items/${item.item.id}`)}
+										>{item.item.name}</a
+									></td
+								>
+								<td class="text-right">{formatValue(item.item.limit)}</td>
+								<td class="text-right">{formatNumber(item.item.volume)}</td>
+								<td class="text-right">
+									{formatNumber(item.item.latest.low)}
+								</td>
+								<td class="text-right">{formatNumber(item.count)}</td>
 							</tr>
-						</tbody>
-					</table>
+						{/each}
+						<tr>
+							<td></td>
+							<td>Output Value</td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right">
+								{formatNumber(potion.outputValue)}
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>Difference</td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							<td class="text-right"></td>
+							{#if sign === 1}
+								<td class="bg-success text-right text-success-content"
+									>{formatNumber(potion.margin)}</td
+								>
+							{:else if sign === -1}
+								<td class="bg-error text-right text-error-content"
+									>{formatNumber(potion.margin)}</td
+								>
+							{:else}
+								<td class="text-right">{formatNumber(potion.margin)}</td>
+							{/if}
+						</tr>
+					</tbody>
+				</table>
 				</div>
 			</div>
 		</li>

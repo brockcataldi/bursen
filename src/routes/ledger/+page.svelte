@@ -1,16 +1,19 @@
 <script lang="ts">
 	import { formatCurrency } from '$lib/functions';
-	import { type ChartTransaction } from '$lib/types';
 
 	import {
 		ledger,
-		addEntry,
-		deleteEntry,
-		duplicateEntry,
-		moveEntryUp,
-		moveEntryDown,
-		updateEntry,
-		clearLedger
+		balance,
+		profit,
+		length,
+		chart,
+		onAdd,
+		onDelete,
+		onDuplicate,
+		onMoveUp,
+		onMoveDown,
+		onChange,
+		onClear
 	} from '$lib/stores/ledger';
 
 	import Chart from './_components/chart.svelte';
@@ -23,36 +26,6 @@
 
 	let showChart = $state(false);
 	let allowReordering = $state(false);
-
-	let max = $derived($ledger.length);
-	let chart = $derived.by(() => {
-		let value = 0;
-		return $ledger.map((entry): ChartTransaction => {
-			value += (entry.type === 'buy' ? -1 : 1) * entry.value * entry.quantity;
-			return {
-				label: entry.label,
-				value
-			};
-		});
-	});
-
-	let profit = $derived.by(() => {
-		let buys = 0;
-		let sells = 0;
-
-		for (const entry of $ledger) {
-			if (entry.type === 'buy') {
-				buys += entry.value * entry.quantity;
-			}
-			if (entry.type === 'sell') {
-				sells += entry.value * entry.quantity;
-			}
-		}
-
-		return sells - buys;
-	});
-
-	let balance = $derived(chart.at(-1)?.value ?? 0);
 </script>
 
 <header
@@ -61,15 +34,15 @@
 	<div class="stats stats-horizontal">
 		<div class="stat">
 			<div class="stat-title">Balance</div>
-			<div class="stat-value">{formatCurrency(balance)}</div>
+			<div class="stat-value">{formatCurrency($balance)}</div>
 		</div>
 		<div class="stat">
 			<div class="stat-title">Profit</div>
-			<div class="stat-value">{formatCurrency(profit)}</div>
+			<div class="stat-value">{formatCurrency($profit)}</div>
 		</div>
 		<div class="stat">
 			<div class="stat-title">Transactions</div>
-			<div class="stat-value">{max}</div>
+			<div class="stat-value">{$length}</div>
 		</div>
 	</div>
 	<div>
@@ -90,7 +63,7 @@
 
 {#if showChart}
 	<div class="mx-4 my-4 rounded-l border border-base-content/8 bg-base-100 p-4">
-		<Chart entries={chart} />
+		<Chart entries={$chart} />
 	</div>
 {/if}
 
@@ -101,22 +74,22 @@
 				<Transaction
 					{allowReordering}
 					{index}
-					{max}
+					max={$length}
 					{entry}
 					items={data.items}
-					onChange={updateEntry}
-					onDelete={deleteEntry}
-					onMoveUp={moveEntryUp}
-					onMoveDown={moveEntryDown}
-					onDuplicate={duplicateEntry}
+					{onChange}
+					{onDelete}
+					{onMoveUp}
+					{onMoveDown}
+					{onDuplicate}
 				/>
 			</li>
 		{/each}
 		<li class="flex w-full flex-row justify-between gap-2">
-			<button class="btn btn-outline btn-primary" onclick={() => addEntry()}
+			<button class="btn btn-outline btn-primary" onclick={() => onAdd()}
 				><Plus />Add Transaction</button
 			>
-			<button class="btn btn-outline btn-error" onclick={() => clearLedger()}
+			<button class="btn btn-outline btn-error" onclick={() => onClear()}
 				><Trash />Clear</button
 			>
 		</li>

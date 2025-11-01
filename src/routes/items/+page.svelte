@@ -3,13 +3,17 @@
 	import { resolve } from '$app/paths';
 
 	import { type ItemKey, type Item } from '$lib/types.js';
-	import { formatValue, getSortValue } from '$lib/functions';
+
+	import { onAdd } from '$lib/stores/ledger.js';
+
+	import { balance as filterBalance } from '$lib/stores/filters.js';
+	import { balance } from '$lib/stores/ledger.js';
+
 	import { PAGE_SIZE } from '$lib/constants.js';
-	import { formatNumber } from '$lib/functions';
+	import { formatValue, getSortValue, formatNumber } from '$lib/functions';
 
 	import Pagination from '$lib/components/pagination.svelte';
 	import SortIcon from '$lib/components/sort-icon.svelte';
-	import { addEntry } from '$lib/stores/ledger.js';
 
 	let { data } = $props();
 
@@ -19,11 +23,13 @@
 	let page = $state(1);
 
 	let filtered = $derived(
-		data.items.filter((item) =>
-			search.trim()
-				? item.name.toLowerCase().includes(search.toLowerCase())
-				: true
-		)
+		data.items
+			.filter((item) =>
+				search.trim()
+					? item.name.toLowerCase().includes(search.toLowerCase())
+					: true
+			)
+			.filter((item) => ($filterBalance ? item.latest.low <= $balance : true))
 	);
 
 	let max = $derived(Math.floor(filtered.length / PAGE_SIZE) + 1);
@@ -57,7 +63,7 @@
 	}
 
 	function onClickLow(item: Item) {
-		addEntry({
+		onAdd({
 			id: crypto.randomUUID(),
 			label: item.name,
 			type: 'buy',
@@ -69,7 +75,7 @@
 	}
 
 	function onClickSell(item: Item) {
-		addEntry({
+		onAdd({
 			id: crypto.randomUUID(),
 			label: item.name,
 			type: 'sell',
@@ -159,7 +165,7 @@
 							<img src={item.icon} alt={item.name} />
 						</div>
 					</td>
-					<td><a href={resolve(`/items/${item.id}`)}>{item.name} - {item.id}</a></td>
+					<td><a href={resolve(`/items/${item.id}`)}>{item.name}</a></td>
 					<td class="text-right">{formatValue(item.limit)}</td>
 					<td class="text-right">{formatNumber(item.volume)}</td>
 					<td class="text-right">

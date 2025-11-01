@@ -10,6 +10,8 @@
 	import ArchiveBoxXMark from '$lib/icons/archive-box-x-mark.svelte';
 	import Beaker from '$lib/icons/beaker.svelte';
 
+	import { balance } from '$lib/stores/filters.js';
+
 	type Props = {
 		children: Snippet;
 		when?: number | null;
@@ -92,6 +94,14 @@
 			</ul>
 
 			<ul class="menu w-full">
+				<li>
+					<fieldset class="fieldset is-drawer-close:hidden">
+						<label class="label">
+							<input type="checkbox" class="toggle" bind:checked={$balance} />
+							Filter by Ledger Balance
+						</label>
+					</fieldset>
+				</li>
 				<li>
 					<button
 						onclick={handleRefresh}
