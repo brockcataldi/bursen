@@ -21,6 +21,8 @@
 
 	import Plus from '$lib/icons/plus.svelte';
 	import Trash from '$lib/icons/trash.svelte';
+	import ArrowUpTray from '$lib/icons/arrow-up-tray.svelte';
+	import ArrowDownTray from '$lib/icons/arrow-down-tray.svelte';
 
 	let { data } = $props();
 
@@ -45,7 +47,7 @@
 			<div class="stat-value">{$length}</div>
 		</div>
 	</div>
-	<div>
+	<div class="flex flex-col items-start justify-start gap-2 w-50">
 		<fieldset class="fieldset">
 			<label class="label">
 				<input type="checkbox" class="toggle" bind:checked={showChart} />
@@ -58,6 +60,11 @@
 				Allow reordering
 			</label>
 		</fieldset>
+
+		<div class="join">
+			<button class="btn join-item btn-outline btn-primary"> <ArrowUpTray /> Import </button>
+			<button class="btn join-item btn-outline btn-primary"> <ArrowDownTray /> Export </button>
+		</div>
 	</div>
 </header>
 

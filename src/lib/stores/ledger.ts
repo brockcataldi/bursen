@@ -1,5 +1,7 @@
 import { derived, writable } from 'svelte/store';
-import type { ChartTransaction, Transaction } from '../types';
+import type { ChartTransaction, Transaction, Item } from '../types';
+import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 
 function load() {
 	const ledger = localStorage.getItem('ledger');
@@ -119,4 +121,56 @@ export function onMoveDown(id: string) {
 		}
 		return value;
 	});
+}
+
+export function onClickBuyItem(item: Item) {
+	onAdd({
+		id: crypto.randomUUID(),
+		label: item.name,
+		type: 'buy',
+		value: item.latest.low,
+		quantity: 1
+	});
+
+	goto(resolve('/ledger'));
+}
+
+export function onClickBuyItems(items: Item[]) {
+	for (const item of items) {
+		onAdd({
+			id: crypto.randomUUID(),
+			label: item.name,
+			type: 'buy',
+			value: item.latest.low,
+			quantity: 1
+		});
+	}
+
+	goto(resolve('/ledger'));
+}
+
+export function onClickSellItem(item: Item) {
+	onAdd({
+		id: crypto.randomUUID(),
+		label: item.name,
+		type: 'sell',
+		value: item.latest.sell,
+		quantity: 1
+	});
+
+	goto(resolve('/ledger'));
+}
+
+export function onClickSellItems(items: Item[]) {
+	for (const item of items) {
+		onAdd({
+			id: crypto.randomUUID(),
+			label: item.name,
+			type: 'sell',
+			value: item.latest.sell,
+			quantity: 1
+		});
+	}
+
+	goto(resolve('/ledger'));
 }

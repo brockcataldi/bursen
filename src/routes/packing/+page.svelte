@@ -4,7 +4,12 @@
 	import { formatNumber, formatValue } from '$lib/functions';
 
 	import { balance as filterBalance } from '$lib/stores/filters.js';
-	import { balance } from '$lib/stores/ledger.js';
+	import {
+		balance,
+		onClickBuyItem,
+		onClickSellItem,
+		onClickBuyItems
+	} from '$lib/stores/ledger.js';
 	import Pagination from '$lib/components/pagination.svelte';
 	import Plus from '$lib/icons/plus.svelte';
 
@@ -15,9 +20,12 @@
 
 	let filtered = $derived(
 		data.sets
-			.filter((set) => ($filterBalance ? set.cost <= $balance : true))
+			.filter((set) =>
+				$filterBalance && $balance > 0 ? set.cost <= $balance : true
+			)
 			.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 	);
+
 	function onChangePage(newPage: number) {
 		page = newPage;
 	}
@@ -89,7 +97,8 @@
 									</td>
 									<td class="text-right">
 										<button
-											class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
+											onclick={() => onClickBuyItem(item)}
+											class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
 											data-tip={`Add ${item.name} to Ledger`}
 										>
 											<Plus />
@@ -108,11 +117,12 @@
 								</td>
 								<td class="text-right">
 									<button
-										class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
+										onclick={() => onClickBuyItems(set.items)}
+										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
 										data-tip="Add Components to Ledger"
 									>
 										<Plus />
-										<span class="sr-only">Add Items to Ledger</span>
+										<span class="sr-only">Add Components to Ledger</span>
 									</button>
 								</td>
 							</tr>
@@ -148,11 +158,14 @@
 								</td>
 								<td class="text-right">
 									<button
-										class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
-										data-tip={`Add ${set.set.name} to Ledger`}
+										onclick={() => onClickSellItem(set.set)}
+										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+										data-tip={`Add ${set.set.name} Sell to Ledger`}
 									>
 										<Plus />
-										<span class="sr-only">Add {set.set.name} to Ledger</span>
+										<span class="sr-only"
+											>Add {set.set.name} Sell to Ledger</span
+										>
 									</button>
 								</td>
 							</tr>

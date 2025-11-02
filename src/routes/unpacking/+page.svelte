@@ -7,7 +7,12 @@
 	import Plus from '$lib/icons/plus.svelte';
 
 	import { balance as filterBalance } from '$lib/stores/filters.js';
-	import { balance } from '$lib/stores/ledger.js';
+	import {
+		balance,
+		onClickBuyItem,
+		onClickSellItem,
+		onClickSellItems
+	} from '$lib/stores/ledger.js';
 
 	let { data } = $props();
 
@@ -16,7 +21,9 @@
 
 	let filtered = $derived(
 		data.sets
-			.filter((set) => ($filterBalance ? set.cost <= $balance : true))
+			.filter((set) =>
+				$filterBalance && $balance > 0 ? set.cost <= $balance : true
+			)
 			.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 	);
 
@@ -92,7 +99,8 @@
 								</td>
 								<td class="text-right">
 									<button
-										class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
+										onclick={() => onClickBuyItem(set.set)}
+										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
 										data-tip={`Add ${set.set.name} to Ledger`}
 									>
 										<Plus />
@@ -131,7 +139,8 @@
 									</td>
 									<td class="text-right">
 										<button
-											class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
+											onclick={() => onClickSellItem(item)}
+											class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
 											data-tip={`Add ${item.name} to Ledger`}
 										>
 											<Plus />
@@ -150,7 +159,8 @@
 								</td>
 								<td class="text-right">
 									<button
-										class="tooltip btn tooltip-left btn-square btn-outline btn-primary"
+										onclick={() => onClickSellItems(set.items)}
+										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
 										data-tip="Add Components to Ledger"
 									>
 										<Plus />

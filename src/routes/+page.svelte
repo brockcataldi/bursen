@@ -6,7 +6,6 @@
 	<header class="px-4 py-10">
 		<h1 class="text-4xl font-bold">Bursen</h1>
 	</header>
-
 	<h2 class="px-4 text-2xl font-bold">Base Tools</h2>
 	<div class="grid grid-cols-2 gap-4">
 		<div class="card w-full bg-base-100 shadow-lg">

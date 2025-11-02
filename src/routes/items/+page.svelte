@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 
 	import { type ItemKey, type Item } from '$lib/types.js';
 
-	import { onAdd } from '$lib/stores/ledger.js';
+	import { onClickBuyItem, onClickSellItem } from '$lib/stores/ledger.js';
 
 	import { balance as filterBalance } from '$lib/stores/filters.js';
 	import { balance } from '$lib/stores/ledger.js';
@@ -14,6 +13,7 @@
 
 	import Pagination from '$lib/components/pagination.svelte';
 	import SortIcon from '$lib/components/sort-icon.svelte';
+	import Plus from '$lib/icons/plus.svelte';
 
 	let { data } = $props();
 
@@ -29,7 +29,9 @@
 					? item.name.toLowerCase().includes(search.toLowerCase())
 					: true
 			)
-			.filter((item) => ($filterBalance ? item.latest.low <= $balance : true))
+			.filter((item) =>
+				$filterBalance && $balance > 0 ? item.latest.low <= $balance : true
+			)
 	);
 
 	let max = $derived(Math.floor(filtered.length / PAGE_SIZE) + 1);
@@ -61,30 +63,6 @@
 		}
 		direction = direction * -1;
 	}
-
-	function onClickLow(item: Item) {
-		onAdd({
-			id: crypto.randomUUID(),
-			label: item.name,
-			type: 'buy',
-			value: item.latest.low,
-			quantity: 1
-		});
-
-		goto(resolve('/ledger'));
-	}
-
-	function onClickSell(item: Item) {
-		onAdd({
-			id: crypto.randomUUID(),
-			label: item.name,
-			type: 'sell',
-			value: item.latest.sell,
-			quantity: 1
-		});
-
-		goto(resolve('/ledger'));
-	}
 </script>
 
 <header class="p-4">
@@ -103,43 +81,43 @@
 				<th class="w-full">
 					<button
 						onclick={() => onClickSort(column, 'name')}
-						class="flex flex-row items-center justify-start gap-2"
+						class="flex w-full flex-row items-center justify-between gap-2"
 					>
-						Name
+						<span>Name</span>
 						<SortIcon current={column} {direction} column="name" />
 					</button>
 				</th>
-				<th class="w-36">
+				<th class="w-30">
 					<button
 						onclick={() => onClickSort(column, 'limit')}
-						class="flex flex-row items-center justify-start gap-2 text-right"
+						class="flex w-full flex-row items-center justify-between gap-2 text-right"
 					>
 						Buy Limit
 						<SortIcon current={column} {direction} column="limit" />
 					</button>
 				</th>
-				<th class="w-36">
+				<th class="w-30">
 					<button
 						onclick={() => onClickSort(column, 'volume')}
-						class="flex flex-row items-center justify-end gap-2"
+						class="flex w-full flex-row items-center justify-between gap-2 text-right"
 					>
 						Volume
 						<SortIcon current={column} {direction} column="volume" />
 					</button>
 				</th>
-				<th class="w-36">
+				<th class="w-42">
 					<button
 						onclick={() => onClickSort(column, 'low')}
-						class="flex flex-row items-center justify-end gap-2"
+						class="flex w-full flex-row items-center justify-between gap-2 text-right"
 					>
 						Buy Price
 						<SortIcon current={column} {direction} column="low" />
 					</button>
 				</th>
-				<th class="w-36">
+				<th class="w-42">
 					<button
 						onclick={() => onClickSort(column, 'sell')}
-						class="flex flex-row items-center justify-end gap-2"
+						class="flex w-full flex-row items-center justify-between gap-2 text-right"
 					>
 						Sell Price
 						<SortIcon current={column} {direction} column="sell" />
@@ -148,7 +126,7 @@
 				<th class="w-36">
 					<button
 						onclick={() => onClickSort(column, 'margin')}
-						class="flex flex-row items-center justify-end gap-2"
+						class="flex w-full flex-row items-center justify-between gap-2 text-right"
 					>
 						Margin
 						<SortIcon current={column} {direction} column="margin" />
@@ -169,19 +147,30 @@
 					<td class="text-right">{formatValue(item.limit)}</td>
 					<td class="text-right">{formatNumber(item.volume)}</td>
 					<td class="text-right">
-						<button
-							class="tooltip btn tooltip-bottom font-normal btn-ghost"
-							data-tip="Add to ledger"
-							onclick={() => onClickLow(item)}
-							>{formatNumber(item.latest.low)}</button
-						>
+						<div class="flex flex-row items-center justify-end gap-4">
+							<span>{formatNumber(item.latest.low)}</span>
+							<button
+								class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+								data-tip={`Add ${item.name} Buy to Ledger`}
+								onclick={() => onClickBuyItem(item)}
+							>
+								<Plus />
+								<span class="sr-only">Add {item.name} Buy to Ledger</span>
+							</button>
+						</div>
 					</td>
 					<td class="text-right">
-						<button
-							class="tooltip btn tooltip-bottom font-normal btn-ghost"
-							onclick={() => onClickSell(item)}
-							data-tip="Add to ledger">{formatNumber(item.latest.sell)}</button
-						>
+						<div class="flex flex-row items-center justify-end gap-4">
+							<span>{formatNumber(item.latest.sell)}</span>
+							<button
+								class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+								data-tip={`Add ${item.name} Sell to Ledger`}
+								onclick={() => onClickSellItem(item)}
+							>
+								<Plus />
+								<span class="sr-only">Add {item.name} Sell to Ledger</span>
+							</button>
+						</div>
 					</td>
 					{#if sign === 1}
 						<td class="bg-success text-right text-success-content"
