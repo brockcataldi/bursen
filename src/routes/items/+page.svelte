@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-
-	import { type ItemKey, type Item } from '$lib/types.js';
+	import { type ItemKey } from '$lib/types.js';
 
 	import { onClickBuyItem, onClickSellItem } from '$lib/stores/ledger.js';
 
@@ -65,6 +64,9 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Items - Bursen</title>
+</svelte:head>
 <header class="p-4">
 	<div class="align-center flex flex-row justify-between gap-4">
 		<div class="input w-full">

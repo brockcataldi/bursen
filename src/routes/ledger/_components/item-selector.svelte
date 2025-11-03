@@ -11,7 +11,6 @@
 
 	let { id, value, items, type, onChange }: Props = $props();
 
-	let inputValue = $state(value);
 	let showSuggestions = $state(false);
 	let filteredItems = $state<Item[]>([]);
 	let selectedIndex = $state(-1);
@@ -27,15 +26,12 @@
 		);
 	}
 
-	function handleInput(event: Event) {
-		const target = event.target as HTMLInputElement;
-		inputValue = target.value;
-
-		filterItems(inputValue);
-		showSuggestions = filteredItems.length > 0 && inputValue.trim() !== '';
+	function handleInput() {
+		filterItems(value);
+		showSuggestions = filteredItems.length > 0 && value.trim() !== '';
 		selectedIndex = -1;
 
-		onChange?.(inputValue);
+		onChange?.(value);
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
@@ -64,7 +60,7 @@
 	}
 
 	function selectItem(item: Item) {
-		inputValue = item.name;
+		value = item.name;
 		showSuggestions = false;
 		selectedIndex = -1;
 
@@ -76,9 +72,9 @@
 		selectedIndex = -1;
 	}
 
-	$effect(() => {
-		inputValue = value;
-	});
+	// $effect(() => {
+	// 	inputValue = value;
+	// });
 </script>
 
 <div class="relative w-full">
@@ -89,7 +85,7 @@
 			type="text"
 			placeholder="Search Items"
 			class="input w-full"
-			bind:value={inputValue}
+			bind:value
 			oninput={handleInput}
 			onkeydown={handleKeydown}
 			onfocus={() => {

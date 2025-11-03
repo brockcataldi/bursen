@@ -2,9 +2,18 @@
 	import { resolve } from '$app/paths';
 </script>
 
+<svelte:head>
+	<title>Bursen</title>
+</svelte:head>
+
 <main class="mx-auto max-w-3xl">
-	<header class="px-4 py-10">
-		<h1 class="text-4xl font-bold">Bursen</h1>
+	<header class="flex flex-row items-center justify-start gap-4 px-4 py-10">
+		<img
+			src="https://oldschool.runescape.wiki/images/Brugsen_Bursen_chathead.png?78f37"
+			alt="Bursen"
+			class="w-12"
+		/>
+		<h1 class="text-6xl font-bold">Bursen</h1>
 	</header>
 	<h2 class="px-4 text-2xl font-bold">Base Tools</h2>
 	<div class="grid grid-cols-2 gap-4">

@@ -33,6 +33,9 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Decanting - Bursen</title>
+</svelte:head>
 <ul class="m-4 join-vertical join">
 	{#each filtered as potion (potion.id)}
 		{@const sign = Math.sign(potion.margin)}

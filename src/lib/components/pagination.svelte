@@ -6,6 +6,28 @@
 	};
 
 	let { page, max, onChange }: Props = $props();
+
+	const previousPages = $derived.by((): number[] => {
+		const pages = [];
+		for (let i = 0; i < 3; i++) {
+			const index = page - 3 + i;
+			if (index > 0) {
+				pages.push(index);
+			}
+		}
+		return pages;
+	});
+
+	const nextPages = $derived.by((): number[] => {
+		const pages = [];
+		for (let i = 0; i < 3; i++) {
+			const index = page + 1 + i;
+			if (index < max) {
+				pages.push(index);
+			}
+		}
+		return pages;
+	});
 </script>
 
 <div class="grid w-full place-items-center py-2">
@@ -20,24 +42,18 @@
 			>
 		{/if}
 
-		{#each { length: 3 } as _, i (page - 3 + i)}
-			{@const index = page - 3 + i}
-			{#if index > 0}
-				<button class="btn join-item" onclick={() => onChange(index)}
-					>{index}</button
-				>
-			{/if}
+		{#each previousPages as previousPage (previousPage)}
+			<button class="btn join-item" onclick={() => onChange(previousPage)}>
+				{previousPage}
+			</button>
 		{/each}
 
 		<span class="btn btn-active join-item" aria-current="page">{page}</span>
 
-		{#each { length: 3 } as _, i (page + 1 + i)}
-			{@const index = page + 1 + i}
-			{#if index < max}
-				<button class="btn join-item" onclick={() => onChange(index)}
-					>{index}</button
-				>
-			{/if}
+		{#each nextPages as nextPage (nextPage)}
+			<button class="btn join-item" onclick={() => onChange(nextPage)}>
+				{nextPage}
+			</button>
 		{/each}
 
 		{#if page <= max - 1}

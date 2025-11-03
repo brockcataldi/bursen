@@ -31,6 +31,9 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Packing - Bursen</title>
+</svelte:head>
 <ul class="m-4 join-vertical join">
 	{#each filtered as set (set.set.id)}
 		{@const sign = Math.sign(set.margin)}

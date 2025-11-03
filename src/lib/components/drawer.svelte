@@ -46,7 +46,7 @@
 						data-tip="Homepage"
 					>
 						<Home />
-						<span class="is-drawer-close:hidden">Index</span>
+						<span class="is-drawer-close:hidden">Items</span>
 					</a>
 				</li>
 

@@ -30,6 +30,9 @@
 	let allowReordering = $state(false);
 </script>
 
+<svelte:head>
+	<title>Ledger - Bursen</title>
+</svelte:head>
 <header
 	class="mx-4 my-4 flex flex-row items-center justify-between rounded-l border border-base-content/8 bg-base-100 p-4"
 >
@@ -47,7 +50,7 @@
 			<div class="stat-value">{$length}</div>
 		</div>
 	</div>
-	<div class="flex flex-col items-start justify-start gap-2 w-50">
+	<div class="flex w-50 flex-col items-start justify-start gap-2">
 		<fieldset class="fieldset">
 			<label class="label">
 				<input type="checkbox" class="toggle" bind:checked={showChart} />
@@ -62,8 +65,12 @@
 		</fieldset>
 
 		<div class="join">
-			<button class="btn join-item btn-outline btn-primary"> <ArrowUpTray /> Import </button>
-			<button class="btn join-item btn-outline btn-primary"> <ArrowDownTray /> Export </button>
+			<button class="btn join-item btn-outline btn-primary">
+				<ArrowUpTray /> Import
+			</button>
+			<button class="btn join-item btn-outline btn-primary">
+				<ArrowDownTray /> Export
+			</button>
 		</div>
 	</div>
 </header>
