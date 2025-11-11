@@ -1,25 +1,25 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
 	import { type ItemKey } from '$lib/types.js';
 
-	import { onClickBuyItem, onClickSellItem } from '$lib/stores/ledger.js';
-
-	import { balance as filterBalance } from '$lib/stores/filters.js';
+	import { settings } from '$lib/stores/settings.js';
 	import { balance } from '$lib/stores/ledger.js';
 
 	import { PAGE_SIZE } from '$lib/constants.js';
-	import { formatValue, getSortValue, formatNumber } from '$lib/functions';
+	import { getSortValue } from '$lib/functions';
 
 	import Pagination from '$lib/components/pagination.svelte';
-	import SortIcon from '$lib/components/sort-icon.svelte';
-	import Plus from '$lib/icons/plus.svelte';
+	import TableHead from './_components/table-head.svelte';
+	import Row from './_components/row.svelte';
 
 	let { data } = $props();
 
-	let search = $state('');
 	let column = $state<ItemKey>('margin');
 	let direction = $state<number>(-1);
 	let page = $state(1);
+
+	let search = $state('');
+	let isP2P = $state(true);
+	let isF2P = $state(true);
 
 	let filtered = $derived(
 		data.items
@@ -28,8 +28,25 @@
 					? item.name.toLowerCase().includes(search.toLowerCase())
 					: true
 			)
+			.filter((item) => {
+				if (isP2P && isF2P) {
+					return true;
+				}
+
+				if (isP2P && !isF2P) {
+					return item.members === true;
+				}
+
+				if (!isP2P && isF2P) {
+					return item.members === false;
+				}
+
+				return false;
+			})
 			.filter((item) =>
-				$filterBalance && $balance > 0 ? item.latest.low <= $balance : true
+				$settings.balance && $balance > 0 && $settings.ledger
+					? item.latest.low <= $balance
+					: true
 			)
 	);
 
@@ -67,125 +84,43 @@
 <svelte:head>
 	<title>Items - Bursen</title>
 </svelte:head>
+
 <header class="p-4">
 	<div class="align-center flex flex-row justify-between gap-4">
-		<div class="input w-full">
-			<label class="label" for="search">Search</label>
-			<input id="search" type="text" placeholder="Spade" bind:value={search} />
-		</div>
+		<fieldset class="fieldset w-full">
+			<legend class="fieldset-legend">Search</legend>
+			<div class="input w-full">
+				<input
+					id="search"
+					type="text"
+					placeholder="Spade"
+					bind:value={search}
+					aria-label="Search"
+				/>
+			</div>
+		</fieldset>
+		<fieldset class="fieldset">
+			<legend class="fieldset-legend">Access</legend>
+			<div class="join-horizontal join gap-2">
+				<label class="label">
+					<input type="checkbox" class="checkbox" bind:checked={isP2P} />
+					<span class="text-sm">Members</span>
+				</label>
+
+				<label class="label">
+					<input type="checkbox" class="checkbox" bind:checked={isF2P} />
+					<span class="text-sm">Free to Play</span>
+				</label>
+			</div>
+		</fieldset>
 	</div>
 </header>
 <div class="mx-4 my-0 rounded-l border border-base-content/8 bg-base-100">
 	<table class="table table-fixed table-zebra">
-		<thead>
-			<tr>
-				<th class="w-6"></th>
-				<th class="w-full">
-					<button
-						onclick={() => onClickSort(column, 'name')}
-						class="flex w-full flex-row items-center justify-between gap-2"
-					>
-						<span>Name</span>
-						<SortIcon current={column} {direction} column="name" />
-					</button>
-				</th>
-				<th class="w-30">
-					<button
-						onclick={() => onClickSort(column, 'limit')}
-						class="flex w-full flex-row items-center justify-between gap-2 text-right"
-					>
-						Buy Limit
-						<SortIcon current={column} {direction} column="limit" />
-					</button>
-				</th>
-				<th class="w-30">
-					<button
-						onclick={() => onClickSort(column, 'volume')}
-						class="flex w-full flex-row items-center justify-between gap-2 text-right"
-					>
-						Volume
-						<SortIcon current={column} {direction} column="volume" />
-					</button>
-				</th>
-				<th class="w-42">
-					<button
-						onclick={() => onClickSort(column, 'low')}
-						class="flex w-full flex-row items-center justify-between gap-2 text-right"
-					>
-						Buy Price
-						<SortIcon current={column} {direction} column="low" />
-					</button>
-				</th>
-				<th class="w-42">
-					<button
-						onclick={() => onClickSort(column, 'sell')}
-						class="flex w-full flex-row items-center justify-between gap-2 text-right"
-					>
-						Sell Price
-						<SortIcon current={column} {direction} column="sell" />
-					</button>
-				</th>
-				<th class="w-36">
-					<button
-						onclick={() => onClickSort(column, 'margin')}
-						class="flex w-full flex-row items-center justify-between gap-2 text-right"
-					>
-						Margin
-						<SortIcon current={column} {direction} column="margin" />
-					</button>
-				</th>
-			</tr>
-		</thead>
+		<TableHead {column} {direction} {onClickSort} />
 		<tbody>
-			{#each paginated as item (item.id)}
-				{@const sign = Math.sign(item.latest.margin)}
-				<tr>
-					<td>
-						<div class="grid h-6 w-6 place-items-center">
-							<img src={item.icon} alt={item.name} />
-						</div>
-					</td>
-					<td><a href={resolve(`/items/${item.id}`)}>{item.name}</a></td>
-					<td class="text-right">{formatValue(item.limit)}</td>
-					<td class="text-right">{formatNumber(item.volume)}</td>
-					<td class="text-right">
-						<div class="flex flex-row items-center justify-end gap-4">
-							<span>{formatNumber(item.latest.low)}</span>
-							<button
-								class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
-								data-tip={`Add ${item.name} Buy to Ledger`}
-								onclick={() => onClickBuyItem(item)}
-							>
-								<Plus />
-								<span class="sr-only">Add {item.name} Buy to Ledger</span>
-							</button>
-						</div>
-					</td>
-					<td class="text-right">
-						<div class="flex flex-row items-center justify-end gap-4">
-							<span>{formatNumber(item.latest.sell)}</span>
-							<button
-								class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
-								data-tip={`Add ${item.name} Sell to Ledger`}
-								onclick={() => onClickSellItem(item)}
-							>
-								<Plus />
-								<span class="sr-only">Add {item.name} Sell to Ledger</span>
-							</button>
-						</div>
-					</td>
-					{#if sign === 1}
-						<td class="bg-success text-right text-success-content"
-							>{formatNumber(item.latest.margin)}</td
-						>
-					{:else if sign === -1}
-						<td class="bg-error text-right text-error-content"
-							>{formatNumber(item.latest.margin)}</td
-						>
-					{:else}
-						<td class="text-right">{formatNumber(item.latest.margin)}</td>
-					{/if}
-				</tr>
+			{#each paginated as item ('item-' + item.id)}
+				<Row {item} />
 			{/each}
 		</tbody>
 	</table>

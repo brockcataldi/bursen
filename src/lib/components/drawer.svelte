@@ -10,7 +10,7 @@
 	import ArchiveBoxXMark from '$lib/icons/archive-box-x-mark.svelte';
 	import Beaker from '$lib/icons/beaker.svelte';
 
-	import { balance } from '$lib/stores/filters.js';
+	import { settings } from '$lib/stores/settings.js';
 
 	type Props = {
 		children: Snippet;
@@ -26,10 +26,20 @@
 		await invalidateAll();
 		refreshing = false;
 	}
+
+	function handleToggle() {
+		$settings.drawer = !$settings.drawer;
+	}
 </script>
 
 <div class="drawer-open drawer">
-	<input id="navigation-drawer" type="checkbox" class="drawer-toggle" checked />
+	<label for="navigation-drawer" class="sr-only">Navigation Drawer</label>
+	<input
+		id="navigation-drawer"
+		type="checkbox"
+		class="drawer-toggle"
+		checked={$settings.drawer}
+	/>
 	<div class="drawer-content">
 		{@render children?.()}
 	</div>
@@ -49,17 +59,18 @@
 						<span class="is-drawer-close:hidden">Items</span>
 					</a>
 				</li>
-
-				<li>
-					<a
-						href={resolve('/ledger')}
-						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-						data-tip="Ledger"
-					>
-						<QueueList />
-						<span class="is-drawer-close:hidden">Ledger</span>
-					</a>
-				</li>
+				{#if $settings.ledger}
+					<li>
+						<a
+							href={resolve('/ledger')}
+							class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+							data-tip="Ledger"
+						>
+							<QueueList />
+							<span class="is-drawer-close:hidden">Ledger</span>
+						</a>
+					</li>
+				{/if}
 				<hr class="my-2" />
 				<li>
 					<a
@@ -97,11 +108,31 @@
 				<li>
 					<fieldset class="fieldset is-drawer-close:hidden">
 						<label class="label">
-							<input type="checkbox" class="toggle" bind:checked={$balance} />
-							Filter by Ledger Balance
+							<input
+								type="checkbox"
+								class="toggle"
+								bind:checked={$settings.ledger}
+							/>
+							Enable Ledger
 						</label>
 					</fieldset>
 				</li>
+
+				{#if $settings.ledger}
+					<li>
+						<fieldset class="fieldset is-drawer-close:hidden">
+							<label class="label">
+								<input
+									type="checkbox"
+									class="toggle"
+									bind:checked={$settings.balance}
+								/>
+								Filter by Ledger Balance
+							</label>
+						</fieldset>
+					</li>
+				{/if}
+				<hr class="my-2" />
 				<li>
 					<button
 						onclick={handleRefresh}
@@ -122,11 +153,13 @@
 					</button>
 				</li>
 				<li>
-					<label
-						for="navigation-drawer"
+					<button
+						type="button"
 						class="is-drawer-close:tooltip is-drawer-close:tooltip-right"
 						data-tip="Open"
-						aria-label="close sidebar"
+						tabindex="0"
+						aria-label="Toggle sidebar navigation"
+						onclick={handleToggle}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +176,7 @@
 							></path></svg
 						>
 						<span class="is-drawer-close:hidden">Collapse</span>
-					</label>
+					</button>
 				</li>
 			</ul>
 		</div>

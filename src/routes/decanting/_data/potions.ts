@@ -1,4 +1,4 @@
-import type { PotionIndexes } from '$lib/types';
+import type { PotionIndexes } from '../types';
 
 const potions: PotionIndexes[] = [
 	{
@@ -478,6 +478,6 @@ const potions: PotionIndexes[] = [
 			4: 2450
 		}
 	}
-];
+] as const;
 
 export default potions;

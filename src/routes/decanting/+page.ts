@@ -1,8 +1,7 @@
 import type { PageLoad } from './$types';
+import type { Decant } from './types';
 
-import potions from '$lib/data/potions';
-import type { DecantRecipe } from '$lib/types';
-
+import potions from './_data/potions';
 import decant from './_functions/decant';
 
 export const load: PageLoad = async ({ parent }) => {
@@ -14,7 +13,7 @@ export const load: PageLoad = async ({ parent }) => {
 		};
 	}
 
-	const vial = map[227];
+	const vial = map[229];
 
 	if (vial === undefined) {
 		return {
@@ -34,26 +33,9 @@ export const load: PageLoad = async ({ parent }) => {
 				}
 			};
 		})
-		.reduce((decants: DecantRecipe[], potion): DecantRecipe[] => {
+		.reduce((decants: Decant[], potion): Decant[] => {
 			return [...decants, ...decant(potion, vial)];
 		}, [])
-		.map((decant) => {
-			const inputValue = decant.input.reduce(
-				(sum, item) => sum + item.item.latest.low * item.count,
-				0
-			);
-			const outputValue = decant.output.reduce(
-				(sum, item) => sum + item.item.latest.sell * item.count,
-				0
-			);
-			const margin = outputValue - inputValue;
-			return {
-				...decant,
-				inputValue,
-				outputValue,
-				margin
-			};
-		})
 		.sort((a, b) => b.margin - a.margin);
 	return {
 		potions: potionItems

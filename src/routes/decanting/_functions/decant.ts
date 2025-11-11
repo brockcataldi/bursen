@@ -1,304 +1,52 @@
-import type { DecantRecipe, Item, Potion } from '$lib/types';
+import type { DecantRecipe, Potion, Decant } from '../types';
+import type { Item } from '$lib/types';
+import { recipes } from '../_data/recipes';
 
-const decant = (potion: Potion, vial: Item): DecantRecipe[] => {
-	return [
-		{
-			id: `${potion.label}-1-2`,
-			label: potion.label,
-			from: 1,
-			fromIcon: potion.doses[1].icon,
-			to: 2,
-			toIcon: potion.doses[2].icon,
-			input: [
-				{
-					item: potion.doses[1],
-					count: 2
-				}
-			],
-			output: [
-				{
-					item: potion.doses[2],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			]
-		},
-		{
-			id: `${potion.label}-1-3`,
-			label: potion.label,
-			from: 1,
-			fromIcon: potion.doses[1].icon,
-			to: 3,
-			toIcon: potion.doses[3].icon,
-			input: [
-				{
-					item: potion.doses[1],
-					count: 3
-				}
-			],
-			output: [
-				{
-					item: potion.doses[3],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 2
-				}
-			]
-		},
-		{
-			id: `${potion.label}-1-4`,
-			label: potion.label,
-			from: 1,
-			fromIcon: potion.doses[1].icon,
-			to: 4,
-			toIcon: potion.doses[4].icon,
-			input: [
-				{
-					item: potion.doses[1],
-					count: 4
-				}
-			],
-			output: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 3
-				}
-			]
-		},
-		{
-			id: `${potion.label}-2-1`,
-			label: potion.label,
-			from: 2,
-			fromIcon: potion.doses[2].icon,
-			to: 1,
-			toIcon: potion.doses[1].icon,
-			input: [
-				{
-					item: potion.doses[2],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			],
-			output: [
-				{
-					item: potion.doses[1],
-					count: 2
-				}
-			]
-		},
-		{
-			id: `${potion.label}-2-3`,
-			label: potion.label,
-			from: 2,
-			fromIcon: potion.doses[2].icon,
-			to: 3,
-			toIcon: potion.doses[3].icon,
-			input: [
-				{
-					item: potion.doses[2],
-					count: 2
-				}
-			],
-			output: [
-				{
-					item: potion.doses[3],
-					count: 1
-				},
-				{
-					item: potion.doses[1],
-					count: 1
-				}
-			]
-		},
-		{
-			id: `${potion.label}-2-4`,
-			label: potion.label,
-			from: 2,
-			fromIcon: potion.doses[2].icon,
-			to: 4,
-			toIcon: potion.doses[4].icon,
-			input: [
-				{
-					item: potion.doses[2],
-					count: 2
-				}
-			],
-			output: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			]
-		},
-		{
-			id: `${potion.label}-3-1`,
-			label: potion.label,
-			from: 3,
-			fromIcon: potion.doses[3].icon,
-			to: 1,
-			toIcon: potion.doses[1].icon,
-			input: [
-				{
-					item: potion.doses[3],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 2
-				}
-			],
-			output: [
-				{
-					item: potion.doses[1],
-					count: 3
-				}
-			]
-		},
-		{
-			id: `${potion.label}-3-2`,
-			label: potion.label,
-			from: 3,
-			fromIcon: potion.doses[3].icon,
-			to: 2,
-			toIcon: potion.doses[2].icon,
-			input: [
-				{
-					item: potion.doses[3],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			],
-			output: [
-				{
-					item: potion.doses[2],
-					count: 2
-				},
-				{
-					item: potion.doses[1],
-					count: 1
-				}
-			]
-		},
-		{
-			id: `${potion.label}-3-4`,
-			label: potion.label,
-			from: 3,
-			fromIcon: potion.doses[3].icon,
-			to: 4,
-			toIcon: potion.doses[4].icon,
-			input: [
-				{
-					item: potion.doses[3],
-					count: 2
-				}
-			],
-			output: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: potion.doses[2],
-					count: 1
-				}
-			]
-		},
-		{
-			id: `${potion.label}-4-1`,
-			label: potion.label,
-			from: 4,
-			fromIcon: potion.doses[4].icon,
-			to: 1,
-			toIcon: potion.doses[1].icon,
-			input: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 3
-				}
-			],
-			output: [
-				{
-					item: potion.doses[1],
-					count: 4
-				}
-			]
-		},
-		{
-			id: `${potion.label}-4-2`,
-			label: potion.label,
-			from: 4,
-			fromIcon: potion.doses[4].icon,
-			to: 2,
-			toIcon: potion.doses[2].icon,
-			input: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			],
-			output: [
-				{
-					item: potion.doses[2],
-					count: 2
-				}
-			]
-		},
-		{
-			id: `${potion.label}-4-3`,
-			label: potion.label,
-			from: 4,
-			fromIcon: potion.doses[4].icon,
-			to: 3,
-			toIcon: potion.doses[3].icon,
-			input: [
-				{
-					item: potion.doses[4],
-					count: 1
-				},
-				{
-					item: vial,
-					count: 1
-				}
-			],
-			output: [
-				{
-					item: potion.doses[3],
-					count: 1
-				},
-				{
-					item: potion.doses[1],
-					count: 1
-				}
-			]
-		}
-	];
+const _decant = (map: DecantRecipe, potion: Potion, vial: Item): Decant => {
+	let inputValue = 0;
+	let outputValue = 0;
+	const input = [];
+	const output = [];
+
+	for (const [item, count] of map.input) {
+		const _item = item === 0 ? vial : potion.doses[item];
+		input.push({
+			item: item === 0 ? vial : potion.doses[item],
+			count
+		});
+
+		inputValue += _item.latest.low * count;
+	}
+
+	for (const [item, count] of map.output) {
+		const _item = item === 0 ? vial : potion.doses[item];
+		output.push({
+			item: item === 0 ? vial : potion.doses[item],
+			count
+		});
+
+		outputValue += _item.latest.low * count;
+	}
+
+	const margin = outputValue - inputValue;
+
+	return {
+		id: `${potion.label}-${map.from}-${map.to}`,
+		label: potion.label,
+		from: map.from,
+		fromIcon: potion.doses[map.to].icon,
+		to: map.to,
+		toIcon: potion.doses[map.from].icon,
+		input,
+		output,
+		inputValue,
+		outputValue,
+		margin
+	};
+};
+
+const decant = (potion: Potion, vial: Item): Decant[] => {
+	return recipes.map((recipe) => _decant(recipe, potion, vial));
 };
 
 export default decant;

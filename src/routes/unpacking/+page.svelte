@@ -6,7 +6,7 @@
 	import Pagination from '$lib/components/pagination.svelte';
 	import Plus from '$lib/icons/plus.svelte';
 
-	import { balance as filterBalance } from '$lib/stores/filters.js';
+	import { settings } from '$lib/stores/settings.js';
 	import {
 		balance,
 		onClickBuyItem,
@@ -22,7 +22,9 @@
 	let filtered = $derived(
 		data.sets
 			.filter((set) =>
-				$filterBalance && $balance > 0 ? set.cost <= $balance : true
+				$settings.balance && $balance > 0 && $settings.ledger
+					? set.cost <= $balance
+					: true
 			)
 			.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 	);
@@ -81,7 +83,9 @@
 								<th class="w-36 text-right"> Buy Limit </th>
 								<th class="w-36 text-right"> Volume </th>
 								<th class="w-36 text-right"> Buy Price </th>
-								<th class="w-20 text-right"> </th>
+								{#if $settings.ledger}
+									<th class="w-20 text-right"> </th>
+								{/if}
 							</tr>
 						</thead>
 						<tbody>
@@ -100,16 +104,18 @@
 								<td class="text-right">
 									{formatNumber(set.set.latest.low)}
 								</td>
-								<td class="text-right">
-									<button
-										onclick={() => onClickBuyItem(set.set)}
-										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
-										data-tip={`Add ${set.set.name} to Ledger`}
-									>
-										<Plus />
-										<span class="sr-only">Add {set.set.name} to Ledger</span>
-									</button>
-								</td>
+								{#if $settings.ledger}
+									<td class="text-right">
+										<button
+											onclick={() => onClickBuyItem(set.set)}
+											class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+											data-tip={`Add ${set.set.name} to Ledger`}
+										>
+											<Plus />
+											<span class="sr-only">Add {set.set.name} to Ledger</span>
+										</button>
+									</td>
+								{/if}
 							</tr>
 						</tbody>
 					</table>
@@ -122,7 +128,9 @@
 								<th class="w-36 text-right"> Buy Limit </th>
 								<th class="w-36 text-right"> Volume </th>
 								<th class="w-36 text-right"> Sell Price </th>
-								<th class="w-20 text-right"> </th>
+								{#if $settings.ledger}
+									<th class="w-20 text-right"> </th>
+								{/if}
 							</tr>
 						</thead>
 						<tbody>
@@ -140,16 +148,18 @@
 									<td class="text-right">
 										{formatNumber(item.latest.sell)}
 									</td>
-									<td class="text-right">
-										<button
-											onclick={() => onClickSellItem(item)}
-											class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
-											data-tip={`Add ${item.name} to Ledger`}
-										>
-											<Plus />
-											<span class="sr-only">Add {item.name} to Ledger</span>
-										</button>
-									</td>
+									{#if $settings.ledger}
+										<td class="text-right">
+											<button
+												onclick={() => onClickSellItem(item)}
+												class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+												data-tip={`Add ${item.name} to Ledger`}
+											>
+												<Plus />
+												<span class="sr-only">Add {item.name} to Ledger</span>
+											</button>
+										</td>
+									{/if}
 								</tr>
 							{/each}
 							<tr>
@@ -160,16 +170,18 @@
 								<td class="text-right">
 									{formatNumber(set.cost)}
 								</td>
-								<td class="text-right">
-									<button
-										onclick={() => onClickSellItems(set.items)}
-										class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
-										data-tip="Add Components to Ledger"
-									>
-										<Plus />
-										<span class="sr-only">Add Items to Ledger</span>
-									</button>
-								</td>
+								{#if $settings.ledger}
+									<td class="text-right">
+										<button
+											onclick={() => onClickSellItems(set.items)}
+											class="tooltip btn tooltip-left btn-square btn-outline btn-sm btn-primary"
+											data-tip="Add Components to Ledger"
+										>
+											<Plus />
+											<span class="sr-only">Add Items to Ledger</span>
+										</button>
+									</td>
+								{/if}
 							</tr>
 							<tr>
 								<td></td>
@@ -179,6 +191,9 @@
 								<td class="text-right {color}">
 									{formatNumber(set.margin)}
 								</td>
+								{#if $settings.ledger}
+									<td class="text-right"></td>
+								{/if}
 							</tr>
 						</tbody>
 					</table>
